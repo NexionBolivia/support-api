@@ -1,0 +1,21 @@
+# Hey dev! please uncomment this code so we have Unit tests, Integration Tests and API tests. thanks!
+
+# # unit-test runner container
+# FROM build as testrunner
+# WORKDIR /app/Support.Services.Tests
+# ENTRYPOINT ["dotnet", "test", "--logger:trx"]
+
+# # integration-test runner container
+# FROM build as integrationtestrunner
+# WORKDIR /app/Support.Integration.Tests
+# ENTRYPOINT ["dotnet", "test", "--logger:trx"]
+
+# # api-test runner container
+# FROM build as apitestrunner
+# WORKDIR /app/Support.API.Tests
+# ENTRYPOINT ["dotnet", "test", "--logger:trx"]
+
+# # run unit-tests
+# FROM build AS test
+# WORKDIR /app/Support.Services.Tests
+# RUN dotnet test --verbosity normal
