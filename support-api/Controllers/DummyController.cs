@@ -108,7 +108,11 @@ namespace support_api.Controllers
                 Guid guid = Guid.NewGuid();
                 request.id = guid.ToString();
             }
-            users.Add(request.id, request);
+            
+            if(users.ContainsKey(request.id))
+                users[request.id] = request;
+            else    
+                users.Add(request.id, request);
             return Ok("ok");
         }
     }
