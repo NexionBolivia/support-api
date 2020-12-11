@@ -66,8 +66,8 @@ namespace support_api.Controllers
             {
                 Token = currentUser.id,
                 KoboUserName = "super_admin",
-                KoboPassword = "kobo password",
-                KoboServerURL = "kobo server"
+                KoboPassword = "proagenda2030",
+                KoboServerURL = "https://kc.nexion-dev.tk/"
             });
         }
 
