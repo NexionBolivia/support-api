@@ -1,12 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>support_api</RootNamespace>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>support_api.services</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
+    <Compile Remove="Migrations\20201210192304_NewMigration.cs" />
+    <Compile Remove="Migrations\20201210192304_NewMigration.Designer.cs" />
+    <Compile Remove="Migrations\20201211143612_NewMigration2.cs" />
+    <Compile Remove="Migrations\20201211143612_NewMigration2.Designer.cs" />
+    <Compile Remove="Migrations\20201211145456_NewMigration3.cs" />
+    <Compile Remove="Migrations\20201211145456_NewMigration3.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,10 +27,5 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\support-api.services\support-api.services.csproj" />
-  </ItemGroup>
-
 
 </Project>
