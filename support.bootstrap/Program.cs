@@ -12,6 +12,7 @@ namespace support.bootstrap
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File("bootstrap.log")
+                .WriteTo.Console()
                 .CreateLogger();
 
             using (var dbContext = ConnectionHelper.CreateDbContext()) 
