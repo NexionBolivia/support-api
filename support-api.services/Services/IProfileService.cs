@@ -1,5 +1,5 @@
 ﻿
-namespace support_api.services.Services
+namespace SupportAPI.Services.Services
 {
     public interface IProfileService
     {

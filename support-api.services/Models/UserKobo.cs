@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace support_api.services.Models
+namespace SupportAPI.Services.Models
 {
     public class UserKobo
     {

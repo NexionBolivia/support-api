@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace support_api.services.Models.ModelConfigurations
+namespace SupportAPI.Services.Models.ModelConfigurations
 {
     public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
     {

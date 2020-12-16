@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using support_api.services.Data;
-using support_api.services.Models;
+using SupportAPI.Services.Data;
+using SupportAPI.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace support_api.services.Extensions
+namespace SupportAPI.Services.Extensions
 {
     public static class ApplicationBuilderExtensions
     {

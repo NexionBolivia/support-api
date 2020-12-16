@@ -12,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using support_api.services.Data;
+using SupportAPI.Services.Data;
 
 namespace support_api
 {
@@ -47,7 +47,7 @@ namespace support_api
 
             //app.UseHttpsRedirection();
 
-            services.Extensions.ApplicationBuilderExtensions.UseDataSeeders(app);
+            SupportAPI.Services.Extensions.ApplicationBuilderExtensions.UseDataSeeders(app);
 
             app.UseRouting();
 
