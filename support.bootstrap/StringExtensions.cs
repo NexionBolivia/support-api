@@ -4,7 +4,7 @@ namespace support.bootstrap
 {
     public static class StringExtensions
     {
-        public static string ReplaceConnectionStringEnvVars(this string toReplace)
+        public static string? ReplaceConnectionStringEnvVars(this string? toReplace)
         {
             return toReplace == null ? 
                       toReplace : toReplace
