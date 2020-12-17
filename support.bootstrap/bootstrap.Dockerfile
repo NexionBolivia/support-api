@@ -12,4 +12,7 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime
 WORKDIR /bootstrap
 COPY --from=publish /bootstrap/support.bootstrap/out ./
-ENTRYPOINT ["dotnet", "support.bootstrap.dll"]
+COPY --from=publish /bootstrap/support.bootstrap/bootstrap-entrypoint.sh ./
+RUN chmod +x ./bootstrap-entrypoint.sh
+RUN apk --update add postgresql-client
+ENTRYPOINT ["sh", "bootstrap-entrypoint.sh"]
