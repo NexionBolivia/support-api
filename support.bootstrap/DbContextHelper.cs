@@ -18,7 +18,7 @@ namespace support.bootstrap
             return new ApplicationDbContext(optionsBuilder.Options);
         }
 
-        public static string GetConnectionString(string? appSettingsFile = "appSettings.json", string? connectionName = "defaultConnection")
+        public static string GetConnectionString(string? appSettingsFile = "appsettings.json", string? connectionName = "defaultConnection")
         {
             var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
