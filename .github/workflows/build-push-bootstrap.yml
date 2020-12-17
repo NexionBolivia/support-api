@@ -16,9 +16,10 @@ jobs:
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
         with:
-          context: .
-          file: ./support.bootstrap/bootstrap.Dockerfile
+          path: .
+          dockerfile: ./support.bootstrap/bootstrap.Dockerfile
           username: ${{ secrets.DOCKER_HUB_USER  }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD  }}
           repository: proagenda2030/support_bootstrap
           tag_with_ref: true
+          tags: latest
