@@ -9,7 +9,9 @@ namespace support.bootstrap
             return toReplace == null ? 
                       toReplace : toReplace
                         .ReplaceWithValue("SUPPORT_DB_SERVER")
+                        .ReplaceWithValue("SUPPORT_DB_INTERNAL_SERVER")                        
                         .ReplaceWithValue("SUPPORT_DB_PORT")
+                        .ReplaceWithValue("SUPPORT_DB_INTERNAL_PORT")
                         .ReplaceWithValue("SUPPORT_DB_NAME")
                         .ReplaceWithValue("SUPPORT_DB_USER")
                         .ReplaceWithValue("SUPPORT_DB_PASSWORD");
