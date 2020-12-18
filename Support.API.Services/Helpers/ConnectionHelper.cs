@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Support.API.Services.Data;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
-namespace Support.Bootstrap
+namespace Support.API.Services.Helpers
 {
     public static class ConnectionHelper
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Support.Bootstrap
+namespace Support.API.Services.Helpers
 {
     public static class StringExtensions
     {

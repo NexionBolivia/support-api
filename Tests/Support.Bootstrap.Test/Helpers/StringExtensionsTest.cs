@@ -1,8 +1,9 @@
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using Support.API.Services.Helpers;
 
-namespace Support.Bootstrap.test
+namespace Support.API.Services.Test
 {
     public class StringExtensionTests
     {

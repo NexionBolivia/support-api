@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Support.API.Services.Data;
+using Support.API.Services.Helpers;
 using System;
-using System.Threading.Tasks;
 
 namespace Support.Bootstrap
 {
