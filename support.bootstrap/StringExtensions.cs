@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace support.bootstrap
+namespace Support.Bootstrap
 {
     public static class StringExtensions
     {

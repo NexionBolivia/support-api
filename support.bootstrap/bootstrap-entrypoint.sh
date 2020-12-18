@@ -15,4 +15,4 @@ done
 >&2 echo "Postgres is UP"
 >&2 echo "Now executing Bootstrap..."
 
-dotnet support.bootstrap.dll
+dotnet Support.Bootstrap.dll

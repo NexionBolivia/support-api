@@ -1,3 +1,3 @@
 echo "Now running API server..."
 
-dotnet support-api.dll
+dotnet Support.API.dll

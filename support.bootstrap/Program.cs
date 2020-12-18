@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Serilog;
-using support_api.services.Data;
+using Support.API.Services.Data;
 using System;
 using System.Threading.Tasks;
 
-namespace support.bootstrap
+namespace Support.Bootstrap
 {
     class Program
     {

@@ -2,7 +2,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System;
 
-namespace support.bootstrap.test
+namespace Support.Bootstrap.test
 {
     public class StringExtensionTests
     {

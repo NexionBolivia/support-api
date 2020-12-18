@@ -3,6 +3,6 @@ version: '3'
 services:
   support-bootstrap:
     build:
-      context: ./support.bootstrap
+      context: ./Support.Bootstrap
       dockerfile: bootstrap.Dockerfile
     container_name: support-bootstrap 
