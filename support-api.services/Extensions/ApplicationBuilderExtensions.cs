@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using support_api.services.Data;
-using support_api.services.Models;
+using SupportAPI.Services.Data;
+using SupportAPI.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace support_api.services.Extensions
+namespace SupportAPI.Services.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
@@ -63,13 +63,13 @@ namespace support_api.services.Extensions
 			if (!context.SupportApiUser.Any())
 			{
 				supportApiUser.Organization = organization;
-				supportApiUser.Username = "JavierUserApi";
-				supportApiUser.Password = "JavierUserApi";
+				supportApiUser.Username = "Capy1";
+				supportApiUser.Password = "Capy1";
 				supportApiUser.SupportApiUser_UserKobo = new List<SupportApiUser_UserKobo>();
 
 				supportApiUser2.Organization = organization;
-				supportApiUser2.Username = "MontanovUserApi";
-				supportApiUser2.Password = "MontanovUserApi";
+				supportApiUser2.Username = "Capy2";
+				supportApiUser2.Password = "Capy2";
 				supportApiUser2.SupportApiUser_UserKobo = new List<SupportApiUser_UserKobo>();
 
 				context.SupportApiUser.Add(supportApiUser);

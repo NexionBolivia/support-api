@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using support_api.services.Data;
+using SupportAPI.Services.Data;
 
-namespace support_api.services.Migrations
+namespace SupportAPI.Services.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -18,7 +18,7 @@ namespace support_api.services.Migrations
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("support_api.services.Models.Organization", b =>
+            modelBuilder.Entity("SupportAPI.Services.Models.Organization", b =>
                 {
                     b.Property<int>("IdOrganization")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace support_api.services.Migrations
                     b.ToTable("Organization");
                 });
 
-            modelBuilder.Entity("support_api.services.Models.Profile", b =>
+            modelBuilder.Entity("SupportAPI.Services.Models.Profile", b =>
                 {
                     b.Property<int>("IdProfile")
                         .ValueGeneratedOnAdd()
@@ -101,7 +101,7 @@ namespace support_api.services.Migrations
                     b.ToTable("Profile");
                 });
 
-            modelBuilder.Entity("support_api.services.Models.SupportApiUser", b =>
+            modelBuilder.Entity("SupportAPI.Services.Models.SupportApiUser", b =>
                 {
                     b.Property<string>("Username")
                         .HasColumnType("character varying(500)")
@@ -121,7 +121,7 @@ namespace support_api.services.Migrations
                     b.ToTable("SupportApiUser");
                 });
 
-            modelBuilder.Entity("support_api.services.Models.SupportApiUser_UserKobo", b =>
+            modelBuilder.Entity("SupportAPI.Services.Models.SupportApiUser_UserKobo", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -136,7 +136,7 @@ namespace support_api.services.Migrations
                     b.ToTable("SupportApiUser_UserKobo");
                 });
 
-            modelBuilder.Entity("support_api.services.Models.UserKobo", b =>
+            modelBuilder.Entity("SupportAPI.Services.Models.UserKobo", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -150,33 +150,33 @@ namespace support_api.services.Migrations
                     b.ToTable("UserKobo");
                 });
 
-            modelBuilder.Entity("support_api.services.Models.Organization", b =>
+            modelBuilder.Entity("SupportAPI.Services.Models.Organization", b =>
                 {
-                    b.HasOne("support_api.services.Models.Profile", "Profile")
+                    b.HasOne("SupportAPI.Services.Models.Profile", "Profile")
                         .WithOne("Organization")
-                        .HasForeignKey("support_api.services.Models.Organization", "IdProfile")
+                        .HasForeignKey("SupportAPI.Services.Models.Organization", "IdProfile")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("support_api.services.Models.SupportApiUser", b =>
+            modelBuilder.Entity("SupportAPI.Services.Models.SupportApiUser", b =>
                 {
-                    b.HasOne("support_api.services.Models.Organization", "Organization")
+                    b.HasOne("SupportAPI.Services.Models.Organization", "Organization")
                         .WithMany("SupportApiUsers")
                         .HasForeignKey("IdOrganization")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("support_api.services.Models.SupportApiUser_UserKobo", b =>
+            modelBuilder.Entity("SupportAPI.Services.Models.SupportApiUser_UserKobo", b =>
                 {
-                    b.HasOne("support_api.services.Models.UserKobo", "UserKobo")
+                    b.HasOne("SupportAPI.Services.Models.UserKobo", "UserKobo")
                         .WithMany("SupportApiUser_UserKobo")
                         .HasForeignKey("Name")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("support_api.services.Models.SupportApiUser", "SupportApiUser")
+                    b.HasOne("SupportAPI.Services.Models.SupportApiUser", "SupportApiUser")
                         .WithMany("SupportApiUser_UserKobo")
                         .HasForeignKey("Username")
                         .OnDelete(DeleteBehavior.Cascade)

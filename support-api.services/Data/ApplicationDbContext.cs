@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using support_api.services.Models;
-using support_api.services.Models.ModelConfigurations;
+using SupportAPI.Services.Models;
+using SupportAPI.Services.Models.ModelConfigurations;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace support_api.services.Data
+namespace SupportAPI.Services.Data
 {
     public class ApplicationDbContext : DbContext
     {
