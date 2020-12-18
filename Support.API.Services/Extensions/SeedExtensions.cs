@@ -3,26 +3,27 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Support.API.Services.Data;
 using Support.API.Services.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Support.API.Services.Extensions
 {
-    public static class ApplicationBuilderExtensions
+    public static class SeedExtensions
     {
-		public static void UseDataSeeders(IApplicationBuilder applicationBuilder)
+		public static void SeedData(IApplicationBuilder applicationBuilder)
 		{
 			using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 			{
-				SeedData(serviceScope.ServiceProvider.GetService<ApplicationDbContext>());
+				var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+				if(dbContext != null)
+					dbContext.SeedData();
 			}
 		}
 
-		public static void SeedData(ApplicationDbContext context)
+		public static void SeedData(this ApplicationDbContext context, bool migrateDb = true)
 		{
-			context.Database.Migrate();
+			if(migrateDb)
+				context.Database.Migrate();
 
 			// Seed Data
 			Profile profile = new Profile();

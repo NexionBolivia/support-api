@@ -12,10 +12,15 @@ namespace Support.API.Services.Helpers
     {
         public static ApplicationDbContext CreateDbContext()
         {
-            var connectionString = GetConnectionString().ReplaceConnectionStringEnvVars();
+            return CreateDbContext(GetConnectionString());
+        }
+
+        public static ApplicationDbContext CreateDbContext(string connectionString)
+        {
+            var connection = connectionString.ReplaceConnectionStringEnvVars();
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseNpgsql(connectionString);
+                .UseNpgsql(connection);
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Support.API.Services.Data;
+using Support.API.Services.Helpers;
 
 namespace Support.Api
 {
@@ -30,7 +31,7 @@ namespace Support.Api
         {
             services.AddDbContext<ApplicationDbContext>(
                     options => options.UseNpgsql(
-                            Configuration.GetConnectionString("DefaultConnection")
+                            Configuration.GetConnectionString("DefaultConnection").ReplaceConnectionStringEnvVars()
                         )
                 );
             services.AddControllers();
@@ -40,15 +41,6 @@ namespace Support.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            /*if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }*/
-
-            //app.UseHttpsRedirection();
-
-            Support.API.Services.Extensions.ApplicationBuilderExtensions.UseDataSeeders(app);
-
             app.UseRouting();
 
             app.UseAuthorization();
