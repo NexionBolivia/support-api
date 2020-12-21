@@ -20,7 +20,8 @@ namespace Support.API.Services.Helpers
         private static string ReplaceWithValue(this string toReplace, string key)
         {
             var envVarValue = Environment.GetEnvironmentVariable(key);
-            return (envVarValue != null) ? toReplace.Replace(key, envVarValue) : toReplace;
+            return (!string.IsNullOrEmpty(envVarValue)) ? toReplace.Replace(key, envVarValue) :
+                LocalDb.Values.ContainsKey(key) ? toReplace.Replace(key, LocalDb.Values[key]) : toReplace;
         }
     }
 }

@@ -55,6 +55,28 @@ namespace Support.API.Services.Test
             connString.ReplaceConnectionStringEnvVars().Should().Be("Server=server; Port=9999; Database=my_db; Username=my_user; Password=my_password");
         }
 
-        
+        [Test]
+        public void ConnString_WithUnreplacedEnvVars()
+        {
+            Environment.SetEnvironmentVariable("SUPPORT_DB_SERVER", string.Empty); // This variable should be replaced with default
+            LocalDb.Values["SUPPORT_DB_SERVER"] = "myDefaultLocalhost";
+
+            Environment.SetEnvironmentVariable("SUPPORT_DB_PORT", string.Empty);
+            LocalDb.Values["SUPPORT_DB_PORT"] = "0000";
+
+            Environment.SetEnvironmentVariable("SUPPORT_DB_NAME", string.Empty);
+            LocalDb.Values["SUPPORT_DB_NAME"] = "myDefaultDatabase";
+
+            Environment.SetEnvironmentVariable("SUPPORT_DB_USER", string.Empty);
+            LocalDb.Values["SUPPORT_DB_USER"] = "myDefaultUser";
+
+            Environment.SetEnvironmentVariable("SUPPORT_DB_PASSWORD", string.Empty);
+            LocalDb.Values["SUPPORT_DB_PASSWORD"] = "myDefaultPassword";
+
+            string connString = "Server=SUPPORT_DB_SERVER; Port=SUPPORT_DB_PORT; Database=SUPPORT_DB_NAME; Username=SUPPORT_DB_USER; Password=SUPPORT_DB_PASSWORD";
+            var replaced = connString.ReplaceConnectionStringEnvVars();
+            replaced.Should().NotBe(connString);
+            replaced.ReplaceConnectionStringEnvVars().Should().Be("Server=myDefaultLocalhost; Port=0000; Database=myDefaultDatabase; Username=myDefaultUser; Password=myDefaultPassword");
+        }
     }
 }
