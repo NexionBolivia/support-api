@@ -4,11 +4,11 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-    - 'pa.*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    - 'bootstrap.*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   docker-build-push:
-    name: build-push-support-api
+    name: bootstrap-db
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -16,7 +16,9 @@ jobs:
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
         with:
+          dockerfile: ./Support.Bootstrap/bootstrap.Dockerfile
           username: ${{ secrets.DOCKER_HUB_USER  }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD  }}
-          repository: proagenda2030/support_api
+          repository: proagenda2030/support_bootstrap
           tag_with_ref: true
+          tags: latest

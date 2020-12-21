@@ -1,18 +1,8 @@
 version: '3'
 
 services:
-  support-api:
-    image: support-dev:latest
-    hostname: support_api
-    container_name: support_api
-    restart: unless-stopped
-    ports:
-      - "8500:80"
-    networks:
-      kobo-fe-network:
-        aliases:
-          - support_api
-
-networks:
-  kobo-fe-network:
-    driver: bridge
+  support-bootstrap:
+    build:
+      context: ./Support.Bootstrap
+      dockerfile: bootstrap.Dockerfile
+    container_name: support-bootstrap 
