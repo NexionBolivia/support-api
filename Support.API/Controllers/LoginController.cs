@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SupportAPI.Services.Services;
+using Support.API.Services.Services;
 using Newtonsoft.Json.Linq;
 using Support.API.Services.Data;
 using Support.API.Services.Models;
+using Support.API.Services.Models.Request;
 
-namespace support_api.Controllers
+namespace Support.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -26,7 +27,7 @@ namespace support_api.Controllers
         }
 
         [HttpPost]
-        public LoginResponse Authenticate(JObject? data)
+        public LoginResponse Authenticate(LoginRequest data)
         {
             return this.profileService.Login(data);
         }

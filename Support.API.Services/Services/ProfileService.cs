@@ -6,8 +6,9 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Support.API.Services.Data;
 using Support.API.Services.Models;
+using Support.API.Services.Models.Request;
 
-namespace SupportAPI.Services.Services
+namespace Support.API.Services.Services
 {
     public class ProfileService : IProfileService
     {
@@ -18,17 +19,16 @@ namespace SupportAPI.Services.Services
             this.context = context;
         }
 
-        public IEnumerable<CompositeProfile> GetProfiles(JObject? data)
+        public IEnumerable<ProfileRequest> GetProfiles(GetProfileRequest data)
         {
-            List<CompositeProfile> response = new List<CompositeProfile>();
+            List<ProfileRequest> response = new List<ProfileRequest>();
 
-            if (data != null && data.HasValues)
+            if (data != null && data.Username != null)
             {
-                LoginData loginData = JsonConvert.DeserializeObject<LoginData>(data.ToString());
-                if (loginData.Username != null)
+                if (data.Username != null)
                 {// Get one profile action
-                    CompositeProfile profile = new CompositeProfile();
-                    SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == loginData.Username);
+                    ProfileRequest profile = new ProfileRequest();
+                    SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == data.Username);
 
                     if (user != null)
                     {
@@ -48,9 +48,9 @@ namespace SupportAPI.Services.Services
             return response;
         }
 
-        private CompositeProfile GetProfileData(SupportApiUser user)
+        private ProfileRequest GetProfileData(SupportApiUser user)
         {
-            CompositeProfile profile = new CompositeProfile();
+            ProfileRequest profile = new ProfileRequest();
 
             if (user != null)
             {
@@ -90,73 +90,71 @@ namespace SupportAPI.Services.Services
             return profile;
         }
 
-        public bool CreateProfile(JObject? data)
+        public bool CreateProfile(ProfileRequest data)
         {
             bool response = false;
 
-            if (data != null && data.HasValues)
+            try
             {
-                CompositeProfile compProfile = JsonConvert.DeserializeObject<CompositeProfile>(data.ToString());
-
-                if (compProfile != null)
+                if (data != null)
                 {
                     // Save Profile
                     Profile profile = new Profile();
-                    profile.Formation = compProfile.Formation;
-                    profile.Address = compProfile.Address;
-                    profile.Phone = compProfile.Phone;
-                    profile.Professionals = compProfile.Professionals;
-                    profile.Employes = compProfile.Employes;
-                    profile.Department = compProfile.Department;
-                    profile.Province = compProfile.Province;
-                    profile.Municipality = compProfile.Municipality;
-                    profile.WaterConnections = compProfile.WaterConnections;
-                    profile.ConnectionsWithMeter = compProfile.ConnectionsWithMeter;
-                    profile.ConnectionsWithoutMeter = compProfile.ConnectionsWithoutMeter;
-                    profile.PublicPools = compProfile.PublicPools;
-                    profile.Latrines = compProfile.Latrines;
-                    profile.ServiceContinuity = compProfile.ServiceContinuity;
+                    profile.Formation = data.Formation;
+                    profile.Address = data.Address;
+                    profile.Phone = data.Phone;
+                    profile.Professionals = data.Professionals;
+                    profile.Employes = data.Employes;
+                    profile.Department = data.Department;
+                    profile.Province = data.Province;
+                    profile.Municipality = data.Municipality;
+                    profile.WaterConnections = data.WaterConnections;
+                    profile.ConnectionsWithMeter = data.ConnectionsWithMeter;
+                    profile.ConnectionsWithoutMeter = data.ConnectionsWithoutMeter;
+                    profile.PublicPools = data.PublicPools;
+                    profile.Latrines = data.Latrines;
+                    profile.ServiceContinuity = data.ServiceContinuity;
                     context.Profile.Add(profile);
                     context.SaveChanges();
 
                     // Save Organization
                     Organization org = new Organization();
                     org.Profile = profile;
-                    org.Name = compProfile.Name;
+                    org.Name = data.Name;
                     context.Organization.Add(org);
                     context.SaveChanges();
 
 
                     // Save User
                     SupportApiUser user = new SupportApiUser();
-                    user.Username = compProfile.Username;
-                    user.Password = this.ToSha256(compProfile.Password);
+                    user.Username = data.Username;
+                    user.Password = this.ToSha256(data.Password);
                     user.Organization = org;
                     context.SupportApiUser.Add(user);
                     context.SaveChanges();
                     response = true;
                 }
             }
+            catch
+            {
+                return response;
+            }
 
             return response;
         }
 
-
-
-        public bool UpdateProfile(JObject? data)
+        public bool UpdateProfile(ProfileRequest data)
         {
             bool response = false;
 
-            if (data != null && data.HasValues)
+            try
             {
-                CompositeProfile compProfile = JsonConvert.DeserializeObject<CompositeProfile>(data.ToString());
-
-                if (compProfile != null)
+                if (data != null)
                 {
-                    SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == compProfile.Username);
+                    SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == data.Username);
 
                     // Update SupportApi Data
-                    user.Password = this.ToSha256(compProfile.Password);
+                    user.Password = this.ToSha256(data.Password);
                     context.SupportApiUser.Update(user);
                     context.SaveChanges();
 
@@ -164,7 +162,7 @@ namespace SupportAPI.Services.Services
                     Organization org = context.Organization.FirstOrDefault(x => x.IdOrganization == user.IdOrganization);
                     if (org != null)
                     {
-                        org.Name = compProfile.Name;
+                        org.Name = data.Name;
                         context.Organization.Update(org);
                         context.SaveChanges();
 
@@ -172,20 +170,20 @@ namespace SupportAPI.Services.Services
                         Profile profile = context.Profile.FirstOrDefault(x => x.IdProfile == org.IdProfile);
                         if (profile != null)
                         {
-                            profile.Formation = compProfile.Formation;
-                            profile.Address = compProfile.Address;
-                            profile.Phone = compProfile.Phone;
-                            profile.Professionals = compProfile.Professionals;
-                            profile.Employes = compProfile.Employes;
-                            profile.Department = compProfile.Department;
-                            profile.Province = compProfile.Province;
-                            profile.Municipality = compProfile.Municipality;
-                            profile.WaterConnections = compProfile.WaterConnections;
-                            profile.ConnectionsWithMeter = compProfile.ConnectionsWithMeter;
-                            profile.ConnectionsWithoutMeter = compProfile.ConnectionsWithoutMeter;
-                            profile.PublicPools = compProfile.PublicPools;
-                            profile.Latrines = compProfile.Latrines;
-                            profile.ServiceContinuity = compProfile.ServiceContinuity;
+                            profile.Formation = data.Formation;
+                            profile.Address = data.Address;
+                            profile.Phone = data.Phone;
+                            profile.Professionals = data.Professionals;
+                            profile.Employes = data.Employes;
+                            profile.Department = data.Department;
+                            profile.Province = data.Province;
+                            profile.Municipality = data.Municipality;
+                            profile.WaterConnections = data.WaterConnections;
+                            profile.ConnectionsWithMeter = data.ConnectionsWithMeter;
+                            profile.ConnectionsWithoutMeter = data.ConnectionsWithoutMeter;
+                            profile.PublicPools = data.PublicPools;
+                            profile.Latrines = data.Latrines;
+                            profile.ServiceContinuity = data.ServiceContinuity;
                             context.Profile.Update(profile);
                             context.SaveChanges();
                             response = true;
@@ -193,21 +191,24 @@ namespace SupportAPI.Services.Services
                     }
                 }
             }
+            catch
+            {
+                return response;
+            }
 
             return response;
         }
 
-        public LoginResponse Login(JObject? data)
+        public LoginResponse Login(LoginRequest data)
         {
             LoginResponse resp = new LoginResponse();
 
-            if (data != null && data.HasValues)
+            if (data != null && data.Username != null && data.Password != null)
             {
-                LoginData loginData = JsonConvert.DeserializeObject<LoginData>(data.ToString());
-                if (loginData.Username != null && loginData.Password != null)
+                if (data.Username != null && data.Password != null)
                 {
-                    SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == loginData.Username
-                    && x.Password == this.ToSha256(loginData.Password));
+                    SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == data.Username
+                    && x.Password == this.ToSha256(data.Password));
 
                     if (user != null)
                     {

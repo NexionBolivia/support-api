@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SupportAPI.Services.Services;
+using Support.API.Services.Services;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 using Support.API.Services.Data;
 using Support.API.Services.Models;
+using Support.API.Services.Models.Request;
 
-namespace support_api.Controllers
+namespace Support.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -28,20 +29,20 @@ namespace support_api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<CompositeProfile> GetProfiles(JObject? data)
+        public IEnumerable<ProfileRequest> GetProfiles(GetProfileRequest data)
         {
             return this.profileService.GetProfiles(data);
         }
 
         [HttpPost]
-        public ActionResult CreateProfile(JObject? data)
+        public ActionResult CreateProfile(ProfileRequest data)
         {
             if (this.profileService.CreateProfile(data)) return Ok();
             else return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         [HttpPut]
-        public ActionResult UpdateProfile(string username, JObject? data)
+        public ActionResult UpdateProfile(string username, ProfileRequest data)
         {
             if (this.profileService.UpdateProfile(data)) return Ok();
             else return StatusCode(StatusCodes.Status500InternalServerError);
