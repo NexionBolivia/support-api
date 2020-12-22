@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Support.API.Services.Models
+namespace Support.API.Services.Models.Request
 {
-    public class CompositeProfile
+    public class ProfileRequest
     {
         // SupportApiUser Fields
         public string Username { get; set; }
