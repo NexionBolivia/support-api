@@ -8,11 +8,11 @@ services:
     volumes:
       - support-api-db-volume:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: user
-      POSTGRES_DB: support
+      POSTGRES_PASSWORD: ${SUPPORT_DB_PASSWORD}
+      POSTGRES_USER: ${SUPPORT_DB_USER}
+      POSTGRES_DB: ${SUPPORT_DB_NAME}
     ports: 
-      - 5432:5432    
+      - ${SUPPORT_DB_PORT}:5432    
 
   adminer:
     image: adminer
