@@ -1,8 +1,59 @@
 version: '3'
 
 services:
+  support-api-db:
+    image: postgres
+    container_name: ${SUPPORT_DB_SERVER}
+    restart: always
+    volumes:
+      - support-api-db-volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_DB: support
+    ports: 
+      - 5432:5432    
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+  
   support-bootstrap:
     build:
-      context: ./Support.Bootstrap
+      context: .
       dockerfile: bootstrap.Dockerfile
-    container_name: support-bootstrap 
+    image: support-bootstrap
+    container_name: support-bootstrap
+    environment: 
+      SUPPORT_DB_SERVER: ${SUPPORT_DB_SERVER}
+      SUPPORT_DB_INTERNAL_SERVER: ${SUPPORT_DB_INTERNAL_SERVER}
+      SUPPORT_DB_PORT: ${SUPPORT_DB_PORT}
+      SUPPORT_DB_INTERNAL_PORT: ${SUPPORT_DB_INTERNAL_PORT}
+      SUPPORT_DB_NAME: ${SUPPORT_DB_NAME}
+      SUPPORT_DB_USER: ${SUPPORT_DB_USER}
+      SUPPORT_DB_PASSWORD: ${SUPPORT_DB_PASSWORD}
+
+  support-api:
+    build:
+      context: .
+      dockerfile: support-api.Dockerfile
+    image: support-dev:latest
+    hostname: support_api
+    container_name: support_api
+    restart: always
+    environment: 
+      SUPPORT_DB_SERVER: ${SUPPORT_DB_SERVER}
+      SUPPORT_DB_INTERNAL_SERVER: ${SUPPORT_DB_INTERNAL_SERVER}
+      SUPPORT_DB_PORT: ${SUPPORT_DB_PORT}
+      SUPPORT_DB_INTERNAL_PORT: ${SUPPORT_DB_INTERNAL_PORT}
+      SUPPORT_DB_NAME: ${SUPPORT_DB_NAME}
+      SUPPORT_DB_USER: ${SUPPORT_DB_USER}
+      SUPPORT_DB_PASSWORD: ${SUPPORT_DB_PASSWORD}
+    ports:
+      - "8500:80"
+
+volumes: 
+  support-api-db-volume:
+    name: support-api-db-volume

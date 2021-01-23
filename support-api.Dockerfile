@@ -17,7 +17,7 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:3.1-alpine AS runtime
 WORKDIR /app
 COPY --from=publish /app/Support.API/out ./
-COPY --from=publish /app/support-entrypoint.sh ./
+COPY --from=publish /app/Support.API/support-entrypoint.sh ./
 RUN chmod +x support-entrypoint.sh
 
 ENTRYPOINT ["sh", "support-entrypoint.sh"]
