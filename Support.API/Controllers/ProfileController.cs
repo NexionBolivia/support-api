@@ -29,9 +29,14 @@ namespace Support.Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ProfileRequest> GetProfiles(GetProfileRequest data)
+        public IEnumerable<ProfileRequest> GetProfiles(string userName)
         {
-            return this.profileService.GetProfiles(data);
+            var response = this.profileService.GetProfiles(userName);
+            if (response.Count() > 0)
+            {
+                return response;
+            }
+            else return null; 
         }
 
         [HttpPost]

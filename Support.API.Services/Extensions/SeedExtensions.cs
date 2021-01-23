@@ -22,7 +22,7 @@ namespace Support.API.Services.Extensions
 
 		public static void SeedData(this ApplicationDbContext context, bool migrateDb = true)
 		{
-			if(migrateDb)
+			if(context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory" && migrateDb)
 				context.Database.Migrate();
 
 			// Seed Data

@@ -9,7 +9,7 @@ namespace Support.API.Services.Services
 {
     public interface IProfileService
     {
-        IEnumerable<ProfileRequest> GetProfiles(GetProfileRequest data);
+        IEnumerable<ProfileRequest> GetProfiles(string userName);
         bool CreateProfile(ProfileRequest data);
         bool UpdateProfile(ProfileRequest data);
         LoginResponse Login(LoginRequest data);
