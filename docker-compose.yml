@@ -4,7 +4,7 @@ services:
   support-api-db:
     image: postgres
     container_name: ${SUPPORT_DB_SERVER}
-    restart: always
+    restart: unless-stopped
     volumes:
       - support-api-db-volume:/var/lib/postgresql/data
     environment:
@@ -42,7 +42,7 @@ services:
     image: support-dev:latest
     hostname: support_api
     container_name: support_api
-    restart: always
+    restart: unless-stopped
     environment: 
       SUPPORT_DB_SERVER: ${SUPPORT_DB_SERVER}
       SUPPORT_DB_INTERNAL_SERVER: ${SUPPORT_DB_INTERNAL_SERVER}
