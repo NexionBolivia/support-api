@@ -28,13 +28,13 @@ namespace Support.Api.Controllers
         }
 
         [HttpPost]
-        public LoginResponse Authenticate(LoginRequest data)
+        public ActionResult<LoginResponse> Authenticate(LoginRequest data)
         {
             if (this.profileService.Login(data).Token != null)
             {
-                return this.profileService.Login(data);
+                return Ok(this.profileService.Login(data));
             }
-            else return null;
+            else return StatusCode(StatusCodes.Status400BadRequest);
         }
     }
 }
