@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using Support.API.Services.Data;
 using Support.API.Services.Models;
 using Support.API.Services.Models.Request;
+using Microsoft.AspNetCore.Http;
 
 namespace Support.Api.Controllers
 {
@@ -27,9 +28,13 @@ namespace Support.Api.Controllers
         }
 
         [HttpPost]
-        public LoginResponse Authenticate(LoginRequest data)
+        public ActionResult<LoginResponse> Authenticate(LoginRequest data)
         {
-            return this.profileService.Login(data);
+            if (this.profileService.Login(data).Token != null)
+            {
+                return Ok(this.profileService.Login(data));
+            }
+            else return StatusCode(StatusCodes.Status400BadRequest);
         }
     }
 }

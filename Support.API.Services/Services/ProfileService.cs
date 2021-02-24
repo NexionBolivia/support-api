@@ -19,21 +19,18 @@ namespace Support.API.Services.Services
             this.context = context;
         }
 
-        public IEnumerable<ProfileRequest> GetProfiles(GetProfileRequest data)
+        public IEnumerable<ProfileRequest> GetProfiles(string userName)
         {
             List<ProfileRequest> response = new List<ProfileRequest>();
 
-            if (data != null && data.Username != null)
-            {
-                if (data.Username != null)
-                {// Get one profile action
-                    ProfileRequest profile = new ProfileRequest();
-                    SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == data.Username);
+            if (userName != null)
+            {// Get one profile action
+                ProfileRequest profile = new ProfileRequest();
+                SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == userName);
 
-                    if (user != null)
-                    {
-                        response.Add(GetProfileData(user));
-                    }
+                if (user != null)
+                {
+                    response.Add(GetProfileData(user));
                 }
             }
             else
