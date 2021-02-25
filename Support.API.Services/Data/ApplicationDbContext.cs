@@ -20,17 +20,19 @@ namespace Support.API.Services.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new AssetConfiguration());
             modelBuilder.ApplyConfiguration(new OrganizationConfiguration());
-            modelBuilder.ApplyConfiguration(new ProfileConfiguration());
-            modelBuilder.ApplyConfiguration(new SupportApiUserConfiguration());
-            modelBuilder.ApplyConfiguration(new UserKoboConfiguration());
-            modelBuilder.ApplyConfiguration(new SupportApiUser_UserKoboConfiguration());
+            modelBuilder.ApplyConfiguration(new OrganizationProfileConfiguration());
+            modelBuilder.ApplyConfiguration(new OrganizationToKoboUserConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleToAssetConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleToKoboUserConfiguration());
         }
 
         // DbSets
-        public DbSet<SupportApiUser> SupportApiUser { get; set; }
-        public DbSet<UserKobo> UserKobo { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<Asset> Asset { get; set; }
         public DbSet<Organization> Organization { get; set; }
-        public DbSet<Profile> Profile { get; set; }
+        public DbSet<OrganizationProfile> Profile { get; set; }
     }
 }

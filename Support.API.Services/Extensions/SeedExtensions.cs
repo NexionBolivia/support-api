@@ -26,9 +26,9 @@ namespace Support.API.Services.Extensions
 				context.Database.Migrate();
 
 			// Seed Data
-			Profile profile = new Profile();
+			OrganizationProfile profile = new OrganizationProfile();
 			Organization organization = new Organization();
-			SupportApiUser supportApiUser = new SupportApiUser();
+			/*SupportApiUser supportApiUser = new SupportApiUser();
 			SupportApiUser supportApiUser2 = new SupportApiUser();
 			UserKobo userKoboAdmin = new UserKobo();
 			UserKobo userKoboApi = new UserKobo();
@@ -97,7 +97,7 @@ namespace Support.API.Services.Extensions
 				supportApiUser.SupportApiUser_UserKobo.Add(saUk);
 				supportApiUser.SupportApiUser_UserKobo.Add(saUk2);
 				context.SaveChanges();
-			}
+			}*/
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace Support.API.Services.Services
         {
             List<ProfileRequest> response = new List<ProfileRequest>();
 
-            if (userName != null)
+            /*if (userName != null)
             {// Get one profile action
                 ProfileRequest profile = new ProfileRequest();
                 SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == userName);
@@ -40,12 +40,12 @@ namespace Support.API.Services.Services
                 {
                     response.Add(GetProfileData(user));
                 }
-            }
+            }*/
 
             return response;
         }
 
-        private ProfileRequest GetProfileData(SupportApiUser user)
+        /*private ProfileRequest GetProfileData(SupportApiUser user)
         {
             ProfileRequest profile = new ProfileRequest();
 
@@ -60,7 +60,7 @@ namespace Support.API.Services.Services
                     profile.Name = org.Name;
 
                     //Get Profile Data
-                    Profile cProfile = context.Profile.FirstOrDefault(x => x.IdProfile == org.IdProfile);
+                    OrganizationProfile cProfile = context.Profile.FirstOrDefault(x => x.IdProfile == org.IdProfile);
 
                     if (cProfile != null)
                     {
@@ -85,7 +85,7 @@ namespace Support.API.Services.Services
             }
 
             return profile;
-        }
+        }*/
 
         public bool CreateProfile(ProfileRequest data)
         {
@@ -96,7 +96,7 @@ namespace Support.API.Services.Services
                 if (data != null)
                 {
                     // Save Profile
-                    Profile profile = new Profile();
+                    OrganizationProfile profile = new OrganizationProfile();
                     profile.Formation = data.Formation;
                     profile.Address = data.Address;
                     profile.Phone = data.Phone;
@@ -115,7 +115,7 @@ namespace Support.API.Services.Services
                     context.SaveChanges();
 
                     // Save Organization
-                    Organization org = new Organization();
+                    /*Organization org = new Organization();
                     org.Profile = profile;
                     org.Name = data.Name;
                     context.Organization.Add(org);
@@ -128,7 +128,7 @@ namespace Support.API.Services.Services
                     user.Password = this.ToSha256(data.Password);
                     user.Organization = org;
                     context.SupportApiUser.Add(user);
-                    context.SaveChanges();
+                    context.SaveChanges();*/
                     response = true;
                 }
             }
@@ -146,7 +146,7 @@ namespace Support.API.Services.Services
 
             try
             {
-                if (data != null)
+                /*if (data != null)
                 {
                     SupportApiUser user = context.SupportApiUser.FirstOrDefault(x => x.Username == data.Username);
 
@@ -164,7 +164,7 @@ namespace Support.API.Services.Services
                         context.SaveChanges();
 
                         // Update Profile Data
-                        Profile profile = context.Profile.FirstOrDefault(x => x.IdProfile == org.IdProfile);
+                        OrganizationProfile profile = context.Profile.FirstOrDefault(x => x.IdProfile == org.IdProfile);
                         if (profile != null)
                         {
                             profile.Formation = data.Formation;
@@ -186,7 +186,7 @@ namespace Support.API.Services.Services
                             response = true;
                         }
                     }
-                }
+                }*/
             }
             catch
             {
@@ -200,7 +200,7 @@ namespace Support.API.Services.Services
         {
             LoginResponse resp = new LoginResponse();
 
-            if (data != null && data.Username != null && data.Password != null)
+            /*if (data != null && data.Username != null && data.Password != null)
             {
                 if (data.Username != null && data.Password != null)
                 {
@@ -215,7 +215,7 @@ namespace Support.API.Services.Services
                         resp.OdkPassword = "ValidOdkPassword";
                     }
                 }
-            }
+            }*/
 
             return resp;
         }
