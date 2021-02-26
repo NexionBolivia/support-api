@@ -24,7 +24,7 @@ namespace Support.API.Services.Helpers
             return new ApplicationDbContext(optionsBuilder.Options);
         }
 
-        public static string GetConnectionString(string? appSettingsFile = _appSettingsFile, string? connectionName = "defaultConnection")
+        public static string GetConnectionString(string? appSettingsFile = _appSettingsFile, string? connectionName = "SupportConnection")
         {
             var configuration = GetConfiguration(appSettingsFile);
             var connectionString = configuration.GetConnectionString(connectionName);

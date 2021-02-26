@@ -18,7 +18,7 @@ namespace Support.API.Services.Helpers
         {
             services.AddDbContext<ApplicationDbContext>(
                     options => options.UseNpgsql(
-                            Configuration.GetConnectionString("DefaultConnection").ReplaceConnectionStringEnvVars()));
+                            Configuration.GetConnectionString("SupportConnection").ReplaceConnectionStringEnvVars()));
         }
 
         public static void ConfigureKoboDatabase(this IServiceCollection services, IConfiguration Configuration)

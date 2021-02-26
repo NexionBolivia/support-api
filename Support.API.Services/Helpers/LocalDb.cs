@@ -6,8 +6,8 @@ public static class LocalDb
     {
         { "SUPPORT_DB_SERVER", "localhost" },
         { "SUPPORT_DB_INTERNAL_SERVER", "localhost" },
-        { "SUPPORT_DB_PORT", "5432" },
-        { "SUPPORT_DB_INTERNAL_PORT", "5432" },
+        { "SUPPORT_DB_PORT", "5440" },
+        { "SUPPORT_DB_INTERNAL_PORT", "5440" },
         { "SUPPORT_DB_NAME", "support" },
         { "SUPPORT_DB_USER", "user" },
         { "SUPPORT_DB_PASSWORD", "password" },

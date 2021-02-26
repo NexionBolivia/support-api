@@ -32,15 +32,19 @@ namespace Support.Api.Controllers
             if(canConnect)
                 return Ok("ok");
 
-            return BadRequest("DB not accessible");
+            return BadRequest("Support DB not accessible");
         }
 
         [Route("healthcheck/kobo-db-conn")]
         public async Task<IActionResult> HealthCheckKoboDBConnectivity()
         {
-            var canConnect = await _koboDbContext.Database.CanConnectAsync();
-            if (canConnect)
-                return Ok("ok");
+            try
+            {
+                var canConnect = await _koboDbContext.Database.CanConnectAsync();
+                if (canConnect)
+                    return Ok("ok");
+            }
+            catch{  }
 
             return BadRequest("Kobo DB not accessible from Support API!");
         }
