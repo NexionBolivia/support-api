@@ -1,15 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Support.API.Services.Data;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Support.API.Services.Helpers
 {
     public static class ConnectionHelper
     {
+        private const string _appSettingsFile = "appsettings.json";
+
         public static ApplicationDbContext CreateDbContext()
         {
             return CreateDbContext(GetConnectionString());
@@ -25,15 +24,20 @@ namespace Support.API.Services.Helpers
             return new ApplicationDbContext(optionsBuilder.Options);
         }
 
-        public static string GetConnectionString(string? appSettingsFile = "appsettings.json", string? connectionName = "defaultConnection")
+        public static string GetConnectionString(string? appSettingsFile = _appSettingsFile, string? connectionName = "SupportConnection")
         {
-            var configurationBuilder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(appSettingsFile, optional: true, reloadOnChange: true);
-
-            var configuration = configurationBuilder.Build();
+            var configuration = GetConfiguration(appSettingsFile);
             var connectionString = configuration.GetConnectionString(connectionName);
             return connectionString;
+        }
+
+        public static IConfiguration GetConfiguration(string appFile = _appSettingsFile)
+        {
+            IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            // Duplicate here any configuration sources you use.
+            configurationBuilder.AddJsonFile(appFile, optional: true, reloadOnChange: true)
+                .SetBasePath(Directory.GetCurrentDirectory());
+            return configurationBuilder.Build();
         }
     }
 }

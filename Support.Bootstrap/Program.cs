@@ -17,10 +17,12 @@ namespace Support.Bootstrap
             using (var dbContext = ConnectionHelper.CreateDbContext()) 
             {
                 Log.Information("Generating db create script...");
-                var createSQL = dbContext.Database.GenerateCreateScript();
+                
                 try
                 {
                     dbContext.Database.EnsureCreated();
+                    // Crear datos mínimos Support API
+                    // Crear datos mínimos publicados por KPI 
                     Log.Information("DB Script executed");
                 }
                 catch (Exception ex)
