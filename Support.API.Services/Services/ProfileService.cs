@@ -111,7 +111,7 @@ namespace Support.API.Services.Services
                     profile.PublicPools = data.PublicPools;
                     profile.Latrines = data.Latrines;
                     profile.ServiceContinuity = data.ServiceContinuity;
-                    context.Profile.Add(profile);
+                    context.OrganizationProfiles.Add(profile);
                     context.SaveChanges();
 
                     // Save Organization
