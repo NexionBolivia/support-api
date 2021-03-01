@@ -5,12 +5,11 @@ using System.Text;
 
 namespace Support.API.Services.Models
 {
-    public class SupportApiUser_UserKobo
+    public class Role
     {
-        public string Username { get; set; }
-        public SupportApiUser SupportApiUser { get; set; }
-
+        public int RoleId { get; set; }
         public string Name { get; set; }
-        public UserKobo UserKobo { get; set; }
+        public List<RoleToAsset> RoleToAssets { get; set; }
+        public List<RoleToKoboUser> RoleToKoboUsers { get; set; }
     }
 }

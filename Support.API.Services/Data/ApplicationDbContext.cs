@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Support.API.Services.Models;
-using Support.API.Services.Models.ModelConfigurations;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,17 +19,17 @@ namespace Support.API.Services.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new OrganizationConfiguration());
-            modelBuilder.ApplyConfiguration(new ProfileConfiguration());
-            modelBuilder.ApplyConfiguration(new SupportApiUserConfiguration());
-            modelBuilder.ApplyConfiguration(new UserKoboConfiguration());
-            modelBuilder.ApplyConfiguration(new SupportApiUser_UserKoboConfiguration());
+            new ApplicationDbContextBuilder().BuildModel(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
 
         // DbSets
-        public DbSet<SupportApiUser> SupportApiUser { get; set; }
-        public DbSet<UserKobo> UserKobo { get; set; }
-        public DbSet<Organization> Organization { get; set; }
-        public DbSet<Profile> Profile { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Asset> Assets { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
+        public DbSet<OrganizationProfile> OrganizationProfiles { get; set; }
+
+        public DbSet<RoleToKoboUser> RolesToKoboUsers { get; set; }
+        public DbSet<OrganizationToKoboUser> OrganizationsToKoboUsers { get; set; }
     }
 }

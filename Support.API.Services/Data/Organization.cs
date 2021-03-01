@@ -7,11 +7,13 @@ namespace Support.API.Services.Models
 {
     public class Organization
     {
-        public int IdOrganization { get; set; }
-        public int IdProfile { get; set; }
-        public Profile Profile { get; set; }
+        public int OrganizationId { get; set; }
         public string Name { get; set; }
-
-        public List<SupportApiUser> SupportApiUsers { get; set; }
+        public int? ParentId { get; set; }
+        public Organization Parent { get; set; }
+        public List<Organization> Children { get; set; }
+        public List<OrganizationToKoboUser> OrganizationToKoboUsers { get; set; }
+        public int IdProfile { get; set; }
+        public OrganizationProfile OrganizationProfile { get; set; }
     }
 }

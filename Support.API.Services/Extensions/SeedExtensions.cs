@@ -26,16 +26,19 @@ namespace Support.API.Services.Extensions
 				context.Database.Migrate();
 
 			// Seed Data
-			Profile profile = new Profile();
+			OrganizationProfile profile = new OrganizationProfile();
 			Organization organization = new Organization();
-			SupportApiUser supportApiUser = new SupportApiUser();
-			SupportApiUser supportApiUser2 = new SupportApiUser();
-			UserKobo userKoboAdmin = new UserKobo();
-			UserKobo userKoboApi = new UserKobo();
-			SupportApiUser_UserKobo saUk = new SupportApiUser_UserKobo();
-			SupportApiUser_UserKobo saUk2 = new SupportApiUser_UserKobo();
+			Role role = new Role();
+			Asset asset = new Asset();
+			RoleToKoboUser roleToKoboUser = new RoleToKoboUser();
+			OrganizationToKoboUser organizationToKoboUser = new OrganizationToKoboUser();
+			RoleToAsset roleToAsset = new RoleToAsset();
+			roleToAsset.Asset = asset;
+			roleToAsset.Role = role;
+			List<RoleToAsset> listRoleToAsset = new List<RoleToAsset>();
+			listRoleToAsset.Add(roleToAsset);
 
-			if (!context.Profile.Any())
+			if (!context.OrganizationProfiles.Any())
 			{
 				profile.Formation = "formation 1";
 				profile.Address = "address 1";
@@ -51,51 +54,43 @@ namespace Support.API.Services.Extensions
 				profile.PublicPools = 1;
 				profile.Latrines = 1;
 				profile.ServiceContinuity = "service continuity 1";
-				context.Profile.Add(profile);
+				context.OrganizationProfiles.Add(profile);
 				context.SaveChanges();
 			}
-			if (!context.Organization.Any())
+			if (!context.Organizations.Any())
 			{
-				organization.Profile = profile;
+				organization.OrganizationProfile = profile;
 				organization.Name = "CAPY 1";
-				context.Organization.Add(organization);
+				context.Organizations.Add(organization);
 				context.SaveChanges();
 			}
-			if (!context.SupportApiUser.Any())
+			if (!context.Roles.Any())
 			{
-				supportApiUser.Organization = organization;
-				supportApiUser.Username = "Capy1";
-				supportApiUser.Password = "Capy1";
-				supportApiUser.SupportApiUser_UserKobo = new List<SupportApiUser_UserKobo>();
-
-				supportApiUser2.Organization = organization;
-				supportApiUser2.Username = "Capy2";
-				supportApiUser2.Password = "Capy2";
-				supportApiUser2.SupportApiUser_UserKobo = new List<SupportApiUser_UserKobo>();
-
-				context.SupportApiUser.Add(supportApiUser);
-				context.SupportApiUser.Add(supportApiUser2);
+				role.Name = "Role 1";
+				context.Roles.Add(role);
 				context.SaveChanges();
 			}
-			if (!context.UserKobo.Any())
+			if (!context.Assets.Any())
 			{
-				userKoboAdmin.Name = "super_admin";
-				userKoboAdmin.Password = "super_admin";
-				context.UserKobo.Add(userKoboAdmin);
-				userKoboApi.Name = "support_api";
-				userKoboApi.Password = "support_api";
-				context.UserKobo.Add(userKoboApi);
+				asset.Name = "Role 1";
+				asset.Path = "Path 1";
+				asset.Type = "VIEW"; //MENU or VIEW
+				asset.RoleToAssets = listRoleToAsset;
+				context.Assets.Add(asset);
 				context.SaveChanges();
 			}
-			if (supportApiUser.SupportApiUser_UserKobo != null &&
-				supportApiUser.SupportApiUser_UserKobo.Count == 0)
-            {
-				saUk.SupportApiUser = supportApiUser;
-				saUk.UserKobo = userKoboAdmin;
-				saUk2.SupportApiUser = supportApiUser;
-				saUk2.UserKobo = userKoboApi;
-				supportApiUser.SupportApiUser_UserKobo.Add(saUk);
-				supportApiUser.SupportApiUser_UserKobo.Add(saUk2);
+			if (!context.RolesToKoboUsers.Any())
+			{
+				roleToKoboUser.Role = role;
+				roleToKoboUser.KoboUserId = 1; //admin
+				context.RolesToKoboUsers.Add(roleToKoboUser);
+				context.SaveChanges();
+			}
+			if (!context.OrganizationsToKoboUsers.Any())
+			{
+				organizationToKoboUser.Organization = organization;
+				organizationToKoboUser.KoboUserId = 1; //admin
+				context.OrganizationsToKoboUsers.Add(organizationToKoboUser);
 				context.SaveChanges();
 			}
 		}
