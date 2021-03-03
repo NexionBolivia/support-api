@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Support.API.Services.Data;
+using Support.API.Services.KoboData;
 using Support.API.Services.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,6 +63,7 @@ namespace Support.API.Services.Extensions
 			{
 				organization.OrganizationProfile = profile;
 				organization.Name = "CAPY 1";
+				organization.Color = "Red";
 				context.Organizations.Add(organization);
 				context.SaveChanges();
 			}
@@ -91,6 +94,66 @@ namespace Support.API.Services.Extensions
 				organizationToKoboUser.Organization = organization;
 				organizationToKoboUser.KoboUserId = 1; //admin
 				context.OrganizationsToKoboUsers.Add(organizationToKoboUser);
+				context.SaveChanges();
+			}
+		}
+
+		public static void SeedKoboUserData(this KoboDbContext context, bool migrateDb = true)
+		{
+			if (context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory" && migrateDb)
+				context.Database.Migrate();
+
+			if (!context.KoboUsers.Any())
+			{
+				context.KoboUsers.Add(new KoboUser()
+				{
+					LastLogin = DateTime.Parse("2021-02-15 18:55:14"),
+					IsSuperUser = true,
+					UserName = "super_admin",
+					FirstName = "",
+					LastName = "",
+					Email = "kobo@example.com",
+					IsStaff = true,
+					IsActive = true,
+					DateJoined = DateTime.Parse("2021-01-31 05:47:13")
+				});
+				context.KoboUsers.Add(new KoboUser()
+				{
+					LastLogin = DateTime.Parse("2021-02-15 18:25:23"),
+					IsSuperUser = false,
+					UserName = "escuela1",
+					FirstName = "",
+					LastName = "",
+					Email = "escuela1@example.com",
+					IsStaff = false,
+					IsActive = true,
+					DateJoined = DateTime.Parse("2021-02-15 18:21:03")
+				});
+				context.KoboUsers.Add(new KoboUser()
+				{
+					LastLogin = DateTime.Parse("2021-02-22 21:05:40"),
+					IsSuperUser = false,
+					UserName = "escuela2",
+					FirstName = "",
+					LastName = "",
+					Email = "escuela2@example.com",
+					IsStaff = false,
+					IsActive = true,
+					DateJoined = DateTime.Parse("2021-02-15 18:22:03")
+				});
+				context.KoboUsers.Add(new KoboUser()
+				{
+					LastLogin = DateTime.Parse("2021-02-22 21:35:17"),
+					IsSuperUser = false,
+					UserName = "escuela3",
+					FirstName = "",
+					LastName = "",
+					Email = "escuela3@example.com",
+					IsStaff = false,
+					IsActive = true,
+					DateJoined = DateTime.Parse("2021-02-15 18:22:16")
+				});
+
 				context.SaveChanges();
 			}
 		}

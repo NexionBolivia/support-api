@@ -53,6 +53,7 @@ namespace Support.Api.Controllers
         public IActionResult Seed()
         {
             _dbContext.SeedData(false);
+            //_koboDbContext.SeedKoboUserData(false);
 
             return Ok("ok");
         }

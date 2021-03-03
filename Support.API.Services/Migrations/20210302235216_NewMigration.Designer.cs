@@ -10,7 +10,7 @@ using Support.API.Services.Data;
 namespace Support.API.Services.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210226212756_NewMigration")]
+    [Migration("20210302235216_NewMigration")]
     partial class NewMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,7 +55,11 @@ namespace Support.API.Services.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("IdProfile")
+                    b.Property<string>("Color")
+                        .HasColumnType("character varying(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("IdProfile")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -209,9 +213,7 @@ namespace Support.API.Services.Migrations
                 {
                     b.HasOne("Support.API.Services.Models.OrganizationProfile", "OrganizationProfile")
                         .WithOne("Organization")
-                        .HasForeignKey("Support.API.Services.Models.Organization", "IdProfile")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Support.API.Services.Models.Organization", "IdProfile");
 
                     b.HasOne("Support.API.Services.Models.Organization", "Parent")
                         .WithMany("Children")
