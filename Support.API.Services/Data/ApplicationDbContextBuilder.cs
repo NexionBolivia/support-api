@@ -35,6 +35,7 @@ namespace Support.API.Services.Data
             builder.HasKey(p => p.OrganizationId);
             builder.Property(p => p.OrganizationId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(p => p.Name).HasMaxLength(500);
+            builder.Property(p => p.Color).HasMaxLength(50);
             builder.HasOne(p => p.Parent).WithMany(p => p.Children).HasForeignKey(p => p.OrganizationId).IsRequired(false);
         }
 
@@ -49,7 +50,7 @@ namespace Support.API.Services.Data
             builder.Property(p => p.Province).HasMaxLength(500);
             builder.Property(p => p.Municipality).HasMaxLength(500);
             builder.Property(p => p.ServiceContinuity).HasMaxLength(500);
-            builder.HasOne(p => p.Organization).WithOne(p => p.OrganizationProfile).HasForeignKey<Organization>(p => p.IdProfile);
+            builder.HasOne(p => p.Organization).WithOne(p => p.OrganizationProfile).HasForeignKey<Organization>(p => p.IdProfile).IsRequired(false);
         }
 
         private void MapSyncRequestOrganizationToKoboUser(EntityTypeBuilder<OrganizationToKoboUser> builder)

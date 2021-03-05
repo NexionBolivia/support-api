@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Support.API.Services.Data;
+using Support.API.Services.KoboData;
 using Support.API.Services.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -61,6 +63,7 @@ namespace Support.API.Services.Extensions
 			{
 				organization.OrganizationProfile = profile;
 				organization.Name = "CAPY 1";
+				organization.Color = "Red";
 				context.Organizations.Add(organization);
 				context.SaveChanges();
 			}

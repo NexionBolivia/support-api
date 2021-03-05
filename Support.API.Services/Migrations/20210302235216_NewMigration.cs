@@ -71,7 +71,8 @@ namespace Support.API.Services.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(maxLength: 500, nullable: true),
                     ParentId = table.Column<int>(nullable: true),
-                    IdProfile = table.Column<int>(nullable: false)
+                    Color = table.Column<string>(maxLength: 50, nullable: true),
+                    IdProfile = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,7 +82,7 @@ namespace Support.API.Services.Migrations
                         column: x => x.IdProfile,
                         principalTable: "OrganizationProfiles",
                         principalColumn: "ProfileId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(

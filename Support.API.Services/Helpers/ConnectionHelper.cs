@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Support.API.Services.Data;
+using Support.API.Services.KoboData;
 using System.IO;
 
 namespace Support.API.Services.Helpers
