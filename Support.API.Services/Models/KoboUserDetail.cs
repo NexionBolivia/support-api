@@ -9,7 +9,7 @@ namespace Support.API.Services.Models
     {
         public string Id { get; set; }
         public string Username { get; set; }
-        public string[] Roles { get; set; }
+        public List<string> Roles { get; set; }
         public List<OrganizationSimple> Organizations { get; set; }
     }
 }

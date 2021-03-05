@@ -24,28 +24,27 @@ namespace Support.API.Services.Services
 
         public IEnumerable<KoboUserDetail> GetAll()
         {
-            List<KoboUserDetail> response = new List<KoboUserDetail>();
+            var response = new List<KoboUserDetail>();
 
             foreach(KoboUser kuser in koboDbContext.KoboUsers.ToList())
             {
-                KoboUserDetail detail = new KoboUserDetail();
+                var detail = new KoboUserDetail();
                 detail.Id = kuser.Id.ToString();
                 detail.Username = kuser.UserName;
 
                 //Get Roles
-                List<string> roleList = new List<string>();
+                var roleList = new List<string>();
                 foreach(RoleToKoboUser role in applicationDbContext.RolesToKoboUsers.Where(x => x.KoboUserId == kuser.Id))
                 {
                     roleList.Add(role.RoleId.ToString());
                 }
-                detail.Roles = roleList.ToArray();
 
                 //Get Organizations
-                List<OrganizationSimple> orgList = new List<OrganizationSimple>();
-                List<OrganizationToKoboUser> orgKoboUserList = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.KoboUserId == kuser.Id).ToList();
+                var orgList = new List<OrganizationSimple>();
+                var orgKoboUserList = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.KoboUserId == kuser.Id).ToList();
                 foreach (OrganizationToKoboUser orgToKobo in orgKoboUserList)
                 {
-                    Organization org = applicationDbContext.Organizations.FirstOrDefault(x => x.OrganizationId == orgToKobo.OrganizationId);
+                    var org = applicationDbContext.Organizations.FirstOrDefault(x => x.OrganizationId == orgToKobo.OrganizationId);
                     if(org != null)
                         orgList.Add(new OrganizationSimple() { 
                             OrganizationId = orgToKobo.OrganizationId.ToString(), Name = org.Name, Color = org.Color, ProfileId = org.IdProfile.ToString()
@@ -61,7 +60,7 @@ namespace Support.API.Services.Services
 
         public bool UpdateKoboUser(KoboUserRequest request)
         {
-            bool response = false;
+            var response = false;
             if ((request == null ? false : !String.IsNullOrEmpty(request.Id)))
             {
                 if ((object)request.Roles != (object)null)
@@ -71,13 +70,12 @@ namespace Support.API.Services.Services
                     {
                         foreach (string role in request.Roles)
                         {
-                            this.applicationDbContext.RolesToKoboUsers.Add(new RoleToKoboUser()
+                            this.applicationDbContext.RolesToKoboUsers.Add(new RoleToKoboUser
                             {
                                 KoboUserId = Int32.Parse(request.Id),
                                 RoleId = Int32.Parse(role)
                             });
                         }
-                        this.applicationDbContext.SaveChanges();
                         response = true;
                     }
                 }
@@ -94,11 +92,11 @@ namespace Support.API.Services.Services
                                 OrganizationId = Int32.Parse(organization)
                             });
                         }
-                        this.applicationDbContext.SaveChanges();
                         response = true;
                     }
                 }
             }
+            this.applicationDbContext.SaveChanges();
             return response;
         }
 
@@ -106,9 +104,8 @@ namespace Support.API.Services.Services
         {
             if (!String.IsNullOrEmpty(koboUserId))
             {
-                List<OrganizationToKoboUser> list = Enumerable.ToList<OrganizationToKoboUser>(Queryable.Where<OrganizationToKoboUser>(this.applicationDbContext.OrganizationsToKoboUsers, (OrganizationToKoboUser x) => x.KoboUserId == Int32.Parse(koboUserId)));
+                var list = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.KoboUserId == Convert.ToInt32(koboUserId)).ToList();
                 this.applicationDbContext.OrganizationsToKoboUsers.RemoveRange(list);
-                this.applicationDbContext.SaveChanges();
             }
         }
 
@@ -116,9 +113,8 @@ namespace Support.API.Services.Services
         {
             if (!String.IsNullOrEmpty(koboUserId))
             {
-                List<RoleToKoboUser> list = Enumerable.ToList<RoleToKoboUser>(Queryable.Where<RoleToKoboUser>(this.applicationDbContext.RolesToKoboUsers, (RoleToKoboUser x) => x.KoboUserId == Int32.Parse(koboUserId)));
+                var list = applicationDbContext.RolesToKoboUsers.Where(x => x.KoboUserId == Convert.ToInt32(koboUserId)).ToList();
                 this.applicationDbContext.RolesToKoboUsers.RemoveRange(list);
-                this.applicationDbContext.SaveChanges();
             }
         }
     }

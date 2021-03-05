@@ -27,7 +27,7 @@ namespace Support.API.Services.Services
             {
                 if (string.IsNullOrEmpty(request.OrganizationId)) //insert
                 {
-                    Organization org = new Organization();
+                    var org = new Organization();
                     
                     if(!string.IsNullOrEmpty(request.ParentOrganizationId))
                         org.ParentId = int.Parse(request.ParentOrganizationId);
@@ -39,13 +39,12 @@ namespace Support.API.Services.Services
                         org.IdProfile = int.Parse(request.ProfileId);
                     
                     applicationDbContext.Organizations.Add(org);
-                    applicationDbContext.SaveChanges();
                     SaveMembersForOrganization(org.OrganizationId, request.Members);
                     response = true;
                 }
                 else //update
                 {
-                    Organization org = applicationDbContext.Organizations.FirstOrDefault(x => x.OrganizationId == int.Parse(request.OrganizationId));
+                    var org = applicationDbContext.Organizations.FirstOrDefault(x => x.OrganizationId == int.Parse(request.OrganizationId));
                     
                     if (!string.IsNullOrEmpty(request.ParentOrganizationId))
                         org.ParentId = int.Parse(request.ParentOrganizationId);
@@ -57,19 +56,19 @@ namespace Support.API.Services.Services
                         org.IdProfile = int.Parse(request.ProfileId);
 
                     applicationDbContext.Organizations.Update(org);
-                    applicationDbContext.SaveChanges();
                     DeleteAllMembersFromOrganization(request.OrganizationId);
                     SaveMembersForOrganization(org.OrganizationId, request.Members);
                     response = true;
                 }
             }
 
+            applicationDbContext.SaveChanges();
             return response;
         }
 
         public IEnumerable<OrganizationResponse> GetAll()
         {
-            List<OrganizationResponse> list = new List<OrganizationResponse>();
+            var list = new List<OrganizationResponse>();
             foreach (Organization organization in Enumerable.ToList<Organization>(this.applicationDbContext.Organizations))
             {
                 list.Add(this.GetResponse(organization));
@@ -79,7 +78,7 @@ namespace Support.API.Services.Services
 
         private OrganizationResponse GetResponse(Organization org)
         {
-            OrganizationResponse organizationResponse = new OrganizationResponse()
+            var organizationResponse = new OrganizationResponse()
             {
                 OrganizationId = org.OrganizationId.ToString(),
                 Name = org.Name,
@@ -91,14 +90,14 @@ namespace Support.API.Services.Services
 
             if (org.ParentId != null && !string.IsNullOrEmpty(org.ParentId.ToString()))
             {
-                List<Organization> orgs = applicationDbContext.Organizations.Where(x => x.OrganizationId == org.ParentId).ToList();
+                var orgs = applicationDbContext.Organizations.Where(x => x.OrganizationId == org.ParentId).ToList();
                 foreach (Organization organization in orgs)
                 {
                     organizationResponse.Organizations.Add(this.GetResponse(organization));
                 }
             }
 
-            List<OrganizationToKoboUser> koboUsers = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.OrganizationId == org.OrganizationId).ToList();
+            var koboUsers = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.OrganizationId == org.OrganizationId).ToList();
             foreach (OrganizationToKoboUser organizationToKoboUser in koboUsers)
             {
                 organizationResponse.Members.Add(organizationToKoboUser.KoboUserId.ToString());
@@ -112,11 +111,10 @@ namespace Support.API.Services.Services
             bool response = false;
             if(!string.IsNullOrEmpty(organizationId))
             {
-                List<Organization> orgs = applicationDbContext.Organizations.Where(x => x.ParentId == int.Parse(organizationId)).ToList();
+                var orgs = applicationDbContext.Organizations.Where(x => x.ParentId == int.Parse(organizationId)).ToList();
                 applicationDbContext.Organizations.RemoveRange(orgs);
-                applicationDbContext.SaveChanges();
 
-                Organization org = applicationDbContext.Organizations.FirstOrDefault(x => x.OrganizationId == int.Parse(organizationId));
+                var org = applicationDbContext.Organizations.FirstOrDefault(x => x.OrganizationId == int.Parse(organizationId));
                 applicationDbContext.Organizations.Remove(org);
                 applicationDbContext.SaveChanges();
                 response = true;
@@ -127,9 +125,8 @@ namespace Support.API.Services.Services
 
         private void DeleteAllMembersFromOrganization(string organizationId)
         {
-            List<OrganizationToKoboUser> list = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.OrganizationId == int.Parse(organizationId)).ToList();
+            var list = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.OrganizationId == int.Parse(organizationId)).ToList();
             applicationDbContext.OrganizationsToKoboUsers.RemoveRange(list);
-            applicationDbContext.SaveChanges();
         }
 
         private void SaveMembersForOrganization(int organizationId, List<string> members)
@@ -138,11 +135,10 @@ namespace Support.API.Services.Services
             {
                 foreach (string id in members)
                 {
-                    OrganizationToKoboUser member = new OrganizationToKoboUser();
+                    var member = new OrganizationToKoboUser();
                     member.KoboUserId = int.Parse(id);
                     member.OrganizationId = organizationId;
                     applicationDbContext.OrganizationsToKoboUsers.Add(member);
-                    applicationDbContext.SaveChanges();
                 }
             }
         }
