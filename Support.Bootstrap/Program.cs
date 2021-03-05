@@ -22,7 +22,7 @@ namespace Support.Bootstrap
                 {
                     dbContext.Database.EnsureCreated();
                     // Crear datos mínimos Support API
-                    // Crear datos mínimos publicados por KPI
+                    // Crear datos mínimos publicados por KPI 
                     Log.Information("DB Script executed");
                 }
                 catch (Exception ex)
