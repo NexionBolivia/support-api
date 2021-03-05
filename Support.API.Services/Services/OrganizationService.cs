@@ -14,12 +14,10 @@ namespace Support.API.Services.Services
     public class OrganizationService : IOrganizationService
     {
         private readonly ApplicationDbContext applicationDbContext;
-        private readonly KoboDbContext koboDbContext;
 
-        public OrganizationService(ApplicationDbContext appContext, KoboDbContext koboContext)
+        public OrganizationService(ApplicationDbContext appContext)
         {
             this.applicationDbContext = appContext;
-            this.koboDbContext = koboContext;
         }
 
         public bool CreateUpdateOrganization(OrganizationRequest request)
@@ -72,12 +70,57 @@ namespace Support.API.Services.Services
         public IEnumerable<OrganizationResponse> GetAll()
         {
             List<OrganizationResponse> list = new List<OrganizationResponse>();
+            foreach (Organization organization in Enumerable.ToList<Organization>(this.applicationDbContext.Organizations))
+            {
+                list.Add(this.GetResponse(organization));
+            }
             return list;
+        }
+
+        private OrganizationResponse GetResponse(Organization org)
+        {
+            OrganizationResponse organizationResponse = new OrganizationResponse()
+            {
+                OrganizationId = org.OrganizationId.ToString(),
+                Name = org.Name,
+                Color = org.Color,
+                ProfileId = org.IdProfile != null ? org.IdProfile.ToString() : "",
+                Organizations = new List<OrganizationResponse>(),
+                Members = new List<string>()
+            };
+
+            if (org.ParentId != null && !string.IsNullOrEmpty(org.ParentId.ToString()))
+            {
+                List<Organization> orgs = applicationDbContext.Organizations.Where(x => x.OrganizationId == org.ParentId).ToList();
+                foreach (Organization organization in orgs)
+                {
+                    organizationResponse.Organizations.Add(this.GetResponse(organization));
+                }
+            }
+
+            List<OrganizationToKoboUser> koboUsers = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.OrganizationId == org.OrganizationId).ToList();
+            foreach (OrganizationToKoboUser organizationToKoboUser in koboUsers)
+            {
+                organizationResponse.Members.Add(organizationToKoboUser.KoboUserId.ToString());
+            }
+
+            return organizationResponse;
         }
 
         public bool DeleteOrganization(string organizationId)
         {
             bool response = false;
+            if(!string.IsNullOrEmpty(organizationId))
+            {
+                List<Organization> orgs = applicationDbContext.Organizations.Where(x => x.ParentId == int.Parse(organizationId)).ToList();
+                applicationDbContext.Organizations.RemoveRange(orgs);
+                applicationDbContext.SaveChanges();
+
+                Organization org = applicationDbContext.Organizations.FirstOrDefault(x => x.OrganizationId == int.Parse(organizationId));
+                applicationDbContext.Organizations.Remove(org);
+                applicationDbContext.SaveChanges();
+                response = true;
+            }
 
             return response;
         }

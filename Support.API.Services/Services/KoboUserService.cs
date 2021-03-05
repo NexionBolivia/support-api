@@ -62,7 +62,64 @@ namespace Support.API.Services.Services
         public bool UpdateKoboUser(KoboUserRequest request)
         {
             bool response = false;
+            if ((request == null ? false : !String.IsNullOrEmpty(request.Id)))
+            {
+                if ((object)request.Roles != (object)null)
+                {
+                    this.DeleteAllRolesFromKoboUser(request.Id);
+                    if (request.Roles.Count > 0)
+                    {
+                        foreach (string role in request.Roles)
+                        {
+                            this.applicationDbContext.RolesToKoboUsers.Add(new RoleToKoboUser()
+                            {
+                                KoboUserId = Int32.Parse(request.Id),
+                                RoleId = Int32.Parse(role)
+                            });
+                        }
+                        this.applicationDbContext.SaveChanges();
+                        response = true;
+                    }
+                }
+                if ((object)request.Organizations != (object)null)
+                {
+                    this.DeleteAllOrganizationsFromKoboUser(request.Id);
+                    if (request.Organizations.Count > 0)
+                    {
+                        foreach (string organization in request.Organizations)
+                        {
+                            this.applicationDbContext.OrganizationsToKoboUsers.Add(new OrganizationToKoboUser()
+                            {
+                                KoboUserId = Int32.Parse(request.Id),
+                                OrganizationId = Int32.Parse(organization)
+                            });
+                        }
+                        this.applicationDbContext.SaveChanges();
+                        response = true;
+                    }
+                }
+            }
             return response;
+        }
+
+        private void DeleteAllOrganizationsFromKoboUser(string koboUserId)
+        {
+            if (!String.IsNullOrEmpty(koboUserId))
+            {
+                List<OrganizationToKoboUser> list = Enumerable.ToList<OrganizationToKoboUser>(Queryable.Where<OrganizationToKoboUser>(this.applicationDbContext.OrganizationsToKoboUsers, (OrganizationToKoboUser x) => x.KoboUserId == Int32.Parse(koboUserId)));
+                this.applicationDbContext.OrganizationsToKoboUsers.RemoveRange(list);
+                this.applicationDbContext.SaveChanges();
+            }
+        }
+
+        private void DeleteAllRolesFromKoboUser(string koboUserId)
+        {
+            if (!String.IsNullOrEmpty(koboUserId))
+            {
+                List<RoleToKoboUser> list = Enumerable.ToList<RoleToKoboUser>(Queryable.Where<RoleToKoboUser>(this.applicationDbContext.RolesToKoboUsers, (RoleToKoboUser x) => x.KoboUserId == Int32.Parse(koboUserId)));
+                this.applicationDbContext.RolesToKoboUsers.RemoveRange(list);
+                this.applicationDbContext.SaveChanges();
+            }
         }
     }
 }

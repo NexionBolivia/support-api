@@ -23,7 +23,6 @@ namespace Support.Api.Controllers
         private readonly KoboDbContext koboDbContext;
         private readonly IKoboUserService koboUserService;
 
-
         public KoboUserController(ApplicationDbContext appContext, KoboDbContext koboContext)
         {
             this.applicationDbContext = appContext;
@@ -40,6 +39,21 @@ namespace Support.Api.Controllers
                 return Ok(response);
             }
             else return StatusCode(StatusCodes.Status204NoContent);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateKoboUser(KoboUserRequest data)
+        {
+            ActionResult actionResult;
+            if (!this.koboUserService.UpdateKoboUser(data))
+            {
+                actionResult = this.StatusCode(500);
+            }
+            else
+            {
+                actionResult = this.Ok();
+            }
+            return actionResult;
         }
     }
 }

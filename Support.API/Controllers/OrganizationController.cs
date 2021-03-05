@@ -20,15 +20,41 @@ namespace Support.Api.Controllers
     {
 
         private readonly ApplicationDbContext applicationDbContext;
-        private readonly KoboDbContext koboDbContext;
         private readonly IOrganizationService organizationService;
 
 
-        public OrganizationController(ApplicationDbContext appContext, KoboDbContext koboContext)
+        public OrganizationController(ApplicationDbContext appContext)
         {
             this.applicationDbContext = appContext;
-            this.koboDbContext = koboContext;
-            this.organizationService = new OrganizationService(appContext, koboContext);
+            this.organizationService = new OrganizationService(appContext);
+        }
+
+        [HttpGet]
+        [ActionName("All")]
+        public ActionResult GetAll()
+        {
+            ActionResult actionResult;
+            IEnumerable<OrganizationResponse> all = this.organizationService.GetAll();
+            if (Enumerable.Count<OrganizationResponse>(all) <= 0)
+            {
+                actionResult = this.StatusCode(204);
+            }
+            else
+            {
+                actionResult = this.Ok(all);
+            }
+            return actionResult;
+        }
+
+        [HttpGet]
+        [ActionName("Delete")]
+        public ActionResult Delete(string organizationId)
+        {
+            if (this.organizationService.DeleteOrganization(organizationId))
+            {
+                return Ok();
+            }
+            else return StatusCode(StatusCodes.Status400BadRequest);
         }
 
         [HttpPost]

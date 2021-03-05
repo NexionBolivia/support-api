@@ -29,23 +29,6 @@ namespace Support.Bootstrap
                     Log.Error(ex, "Error when generating DB from script for Application Data");
                 }
             }
-
-            //Uncomment the following to enable bootstrap local KoboDbContext
-            /*using (var dbContext = ConnectionHelper.CreateKoboDbContext())
-            {
-                Log.Information("Generating db create script for Kobo Data...");
-
-                try
-                {
-                    dbContext.Database.EnsureCreated();
-                    // Crear datos mínimos publicados por KPI 
-                    Log.Information("DB Script executed for Kobo Data");
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Error when generating DB from script for Kobo Data");
-                }
-            }*/
         }
     }
 }
