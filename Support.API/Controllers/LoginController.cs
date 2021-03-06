@@ -18,12 +18,10 @@ namespace Support.Api.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        //private readonly HttpClient _httpClient;
         private readonly IConfiguration _config;
 
         public LoginController(IConfiguration config)
         {
-            //_httpClient = httpClient;
             _config = config;
         }
 
