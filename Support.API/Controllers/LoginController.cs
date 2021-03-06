@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Support.API.Services.Helpers;
+using System.IO;
 
 namespace Support.Api.Controllers
 {
@@ -79,7 +80,7 @@ namespace Support.Api.Controllers
             string token = null;
             try
             {
-                var koboLoginUrl = _config.GetSection("KoBoToolboxUri").Value.ReplaceKoboToolboxUri();
+                var koboLoginUrl = _config.GetSection("KoBoToolboxUri").Value.ReplaceKoboToolboxUri().UrlCombine("token/?format=json");
                 var message = new HttpRequestMessage(HttpMethod.Get, koboLoginUrl);
 
                 var creds = Convert.ToBase64String(
