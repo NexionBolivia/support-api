@@ -17,5 +17,7 @@ public static class LocalDb
         { "KOBO_DB_NAME", "koboform"},
         { "KOBO_DB_USER", "kobo"},
         { "KOBO_DB_PASSWORD", "{nNJ12.nY6ev"},
+
+        { "KOBO_API_SERVER", "https://kf.nexion-dev.tk" }
     };
 }

@@ -28,6 +28,13 @@ namespace Support.API.Services.Helpers
                         .ReplaceWithValue("KOBO_DB_PASSWORD");
         }
 
+        public static string? ReplaceKoboToolboxUri(this string? toReplace)
+        {
+            return toReplace == null ?
+                      toReplace : toReplace
+                        .ReplaceWithValue("KOBO_API_SERVER");
+        }
+
         private static string ReplaceWithValue(this string toReplace, string key)
         {
             var envVarValue = Environment.GetEnvironmentVariable(key);

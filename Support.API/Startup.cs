@@ -1,18 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Support.API.Services.Data;
 using Support.API.Services.Helpers;
 
 namespace Support.Api
@@ -30,7 +19,9 @@ namespace Support.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureDatabases(Configuration);
+            services.ConfigureAuthentication(Configuration);
             services.AddControllers();
+            services.AddHttpClient();
             services.AddControllers().AddNewtonsoftJson();
         }
 
@@ -39,6 +30,7 @@ namespace Support.Api
         {
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

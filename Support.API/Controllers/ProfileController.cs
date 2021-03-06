@@ -1,18 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Support.API.Services.Data;
+using Support.API.Services.Models.Request;
+using Support.API.Services.Services;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Support.API.Services.Services;
-using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Http;
-using Support.API.Services.Data;
-using Support.API.Services.Models;
-using Support.API.Services.Models.Request;
 
 namespace Support.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ProfileController : ControllerBase
