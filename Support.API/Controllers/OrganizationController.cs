@@ -58,7 +58,11 @@ namespace Support.Api.Controllers
         [ActionName("Update")]
         public ActionResult CreateUpdate(OrganizationRequest data)
         {
-            if (this.organizationService.CreateUpdateOrganization(data)) return Ok();
+            var response = this.organizationService.CreateUpdateOrganization(data);
+            if (!string.IsNullOrEmpty(response)) return Ok(new
+            {
+                organizationId = response
+            });
             else return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }

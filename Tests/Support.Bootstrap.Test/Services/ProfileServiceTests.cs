@@ -36,34 +36,27 @@ namespace Support.API.Services.Test.Services
         [Test]
         public void GetProfiles_Empty_Username_Test()
         {
-            Assert.AreEqual(0, profileService.GetProfiles("").Count());
+            Assert.AreEqual(0, profileService.GetProfiles().Count());
         }
 
         [Test]
         public void GetProfiles_Wrong_Username_Test()
         {
-            Assert.AreEqual(0, profileService.GetProfiles("Capy5").Count());
-        }
-
-        [Test]
-        public void GetProfiles_Selected_Username_Test()
-        {
-            Assert.AreEqual(1, profileService.GetProfiles("Capy1").Count());
+            Assert.AreEqual(0, profileService.GetProfile(10).ProfileId);
         }
 
         [Test]
         public void GetProfiles_Select_All_Test()
         {
-            Assert.Greater(profileService.GetProfiles(null).Count(), 1);
+            Assert.Greater(profileService.GetProfiles().Count(), 1);
         }
 
         [Test]
         public void CreateProfile_Result_True_Test()
         {
-            ProfileRequest request = new ProfileRequest() { 
-                Username = "javier", // for SupportApiUser
-                Password = "javier", // for SupportApiUser
-                Name = "Capy4",      // name of the new Organization
+            ProfileRequest request = new ProfileRequest() {
+                ProfileId = "1",
+                OrganizationId = "1",
                 Formation = "Form1", // below data for new profile
                 Address = "Addr1",
                 Phone = "123456",
@@ -79,13 +72,13 @@ namespace Support.API.Services.Test.Services
                 Latrines = 1,
                 ServiceContinuity = "ServCont1"
             };
-            Assert.AreEqual(profileService.CreateProfile(request), true);
+            Assert.AreEqual(profileService.CreateUpdateProfile(request), true);
         }
 
         [Test]
         public void CreateProfile_Result_False_Test()
         {
-            Assert.AreEqual(profileService.CreateProfile(null), false);
+            Assert.AreEqual(profileService.CreateUpdateProfile(null), false);
         }
 
         [Test]
@@ -93,9 +86,8 @@ namespace Support.API.Services.Test.Services
         {
             ProfileRequest request = new ProfileRequest()
             {
-                Username = "Capy1",          // for SupportApiUser
-                Password = "Capy1-new-pass", // for SupportApiUser
-                Name = "Capy5",              // name of the new Organization
+                ProfileId = "1",
+                OrganizationId = "1",
                 Formation = "Form1",         // below data for new profile
                 Address = "Addr2",
                 Phone = "1234567",
@@ -111,41 +103,13 @@ namespace Support.API.Services.Test.Services
                 Latrines = 1,
                 ServiceContinuity = "ServCont2"
             };
-            Assert.AreEqual(profileService.UpdateProfile(request), true);
+            Assert.AreEqual(profileService.CreateUpdateProfile(request), true);
         }
 
         [Test]
         public void UpdateProfile_Result_False_Test()
         {
-            Assert.AreEqual(profileService.UpdateProfile(null), false);
-        }
-
-        [Test]
-        public void Login_Result_Ok_Test()
-        {
-            LoginRequest request = new LoginRequest()
-            {
-                Username = "Capy1",
-                Password = "Capy1"
-            };
-            Assert.AreNotEqual(profileService.Login(request), null);
-        }
-
-        [Test]
-        public void Login_Wrong_Password_Test()
-        {
-            LoginRequest request = new LoginRequest()
-            {
-                Username = "Capy1",
-                Password = "Capy123"
-            };
-            Assert.AreEqual(profileService.Login(request).Token, null);
-        }
-
-        [Test]
-        public void Login_Empty_Data_Test()
-        {
-            Assert.AreEqual(profileService.Login(null).Token, null);
+            Assert.AreEqual(profileService.CreateUpdateProfile(null), false);
         }
     }
 }

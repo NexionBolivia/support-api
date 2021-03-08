@@ -33,10 +33,10 @@ namespace Support.API.Services.Services
                 detail.Username = kuser.UserName;
 
                 //Get Roles
-                var roleList = new List<string>();
+                detail.Roles = new List<string>();
                 foreach(RoleToKoboUser role in applicationDbContext.RolesToKoboUsers.Where(x => x.KoboUserId == kuser.Id))
                 {
-                    roleList.Add(role.RoleId.ToString());
+                    detail.Roles.Add(role.RoleId.ToString());
                 }
 
                 //Get Organizations
@@ -76,7 +76,6 @@ namespace Support.API.Services.Services
                                 RoleId = Int32.Parse(role)
                             });
                         }
-                        response = true;
                     }
                 }
                 if ((object)request.Organizations != (object)null)
@@ -92,11 +91,59 @@ namespace Support.API.Services.Services
                                 OrganizationId = Int32.Parse(organization)
                             });
                         }
-                        response = true;
+                    }
+                }
+                response = true;
+            }
+            this.applicationDbContext.SaveChanges();
+            return response;
+        }
+
+
+        public IEnumerable<OrganizationSimple> GetOrganizationsByKoboUsername(string username)
+        {
+            var response = new List<OrganizationSimple>();
+            var kuser = koboDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
+
+            if(kuser != null)
+            {
+                var koboUsers = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.KoboUserId == kuser.Id).ToList();
+                foreach(OrganizationToKoboUser user in koboUsers)
+                {
+                    var org = applicationDbContext.Organizations.Where(x => x.OrganizationId == user.OrganizationId).FirstOrDefault();
+                    if(org != null)
+                    {
+                        var orgResponse = new OrganizationSimple();
+                        orgResponse.OrganizationId = org.OrganizationId.ToString();
+                        orgResponse.Name = org.Name;
+                        orgResponse.Color = org.Color;
+                        orgResponse.ProfileId = org.IdProfile.ToString();
+                        response.Add(orgResponse);
                     }
                 }
             }
-            this.applicationDbContext.SaveChanges();
+
+            return response;
+        }
+
+        public IEnumerable<string> GetRolesByKoboUsername(string username)
+        {
+            var response = new List<string>();
+            var kuser = koboDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
+
+            if (kuser != null)
+            {
+                var koboUsers = applicationDbContext.RolesToKoboUsers.Where(x => x.KoboUserId == kuser.Id).ToList();
+                foreach (RoleToKoboUser user in koboUsers)
+                {
+                    var role = applicationDbContext.Roles.Where(x => x.RoleId == user.RoleId).FirstOrDefault();
+                    if (role != null)
+                    {
+                        response.Add(role.RoleId.ToString());
+                    }
+                }
+            }
+
             return response;
         }
 

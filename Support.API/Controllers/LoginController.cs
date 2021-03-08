@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Support.API.Services.Helpers;
 using System.IO;
+using Support.API.Services.Data;
+using Support.API.Services.Services;
+using Support.API.Services.KoboData;
 
 namespace Support.Api.Controllers
 {
@@ -19,10 +22,16 @@ namespace Support.Api.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _config;
+        private readonly ApplicationDbContext applicationDbContext;
+        private readonly KoboDbContext koboDbContext;
+        private readonly IKoboUserService koboUserService;
 
-        public LoginController(IConfiguration config)
+        public LoginController(IConfiguration config, ApplicationDbContext appContext, KoboDbContext koboDbContext)
         {
             _config = config;
+            this.applicationDbContext = appContext;
+            this.koboDbContext = koboDbContext;
+            this.koboUserService = new KoboUserService(appContext, koboDbContext);
         }
 
         [HttpPost]
@@ -37,16 +46,12 @@ namespace Support.Api.Controllers
             // Create JWT 
             var jwt = CreateJWT(data, koboToken);
             
-            // TODO: Call a service to get User's Roles and Organizations
-
             return Ok(new 
             { 
                 id = data.Username,
                 authToken = jwt,
-                // TODO: Please fill these up with User's Roles and Organizations
-                roles = new List<string>(),
-                organizations = new List<string>()
-                // organizations = List<OrganizationForUser>()
+                roles = this.koboUserService.GetRolesByKoboUsername(data.Username),
+                organizations = this.koboUserService.GetOrganizationsByKoboUsername(data.Username)
             });
         }
 
