@@ -18,9 +18,9 @@ namespace Support.Api
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                             configuration.GetSection("jwtToken").Value)),
-                        ValidateIssuer = true,
+                        ValidateIssuer = false,
                         ValidateAudience = false
                     };
                 });
