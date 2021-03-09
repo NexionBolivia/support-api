@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Support.API.Services.Helpers;
+using Support.API.Services.Services;
 
 namespace Support.Api
 {
@@ -21,8 +22,12 @@ namespace Support.Api
             services.ConfigureDatabases(Configuration);
             services.ConfigureAuthentication(Configuration);
             services.ConfigureCors();
+
+            services.AddScoped<IKoboUserService, KoboUserService>();
+            
             services.AddControllers();
             services.AddHttpClient();
+            services.AddHttpContextAccessor();
             services.AddControllers().AddNewtonsoftJson();
         }
 

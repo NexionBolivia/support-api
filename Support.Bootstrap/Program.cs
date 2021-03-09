@@ -2,6 +2,7 @@
 using Serilog;
 using Support.API.Services.Helpers;
 using System;
+using System.Linq;
 
 namespace Support.Bootstrap
 {
@@ -20,6 +21,12 @@ namespace Support.Bootstrap
                 
                 try
                 {
+                    if (args.Any(p => p == "--delete"))
+                    {
+                        Log.Information("Flag 'delete' used. Ensuring database deletion");
+                        dbContext.Database.EnsureDeleted();
+                    }
+
                     dbContext.Database.EnsureCreated();
                     // Crear datos mínimos Support API
                     // Crear datos mínimos publicados por KPI 
