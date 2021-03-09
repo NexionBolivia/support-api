@@ -55,7 +55,7 @@ namespace Support.Api.Controllers
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.PrimarySid, data.Username),
+                new Claim(ClaimTypes.NameIdentifier, data.Username),
                 new Claim(ClaimTypes.UserData, koboToken)
             };
 

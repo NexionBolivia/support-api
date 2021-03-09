@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
 using Support.API.Services.Data;
+using Support.API.Services.KoboData;
 using Support.API.Services.Models;
 using Support.API.Services.Models.Request;
-using Support.API.Services.KoboData;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Support.API.Services.Services
 {
@@ -16,7 +15,8 @@ namespace Support.API.Services.Services
         private readonly ApplicationDbContext applicationDbContext;
         private readonly KoboDbContext koboDbContext;
 
-        public KoboUserService(ApplicationDbContext appContext, KoboDbContext koboContext)
+        public KoboUserService(ApplicationDbContext appContext, 
+            KoboDbContext koboContext)
         {
             this.applicationDbContext = appContext;
             this.koboDbContext = koboContext;
@@ -159,6 +159,37 @@ namespace Support.API.Services.Services
             return response;
         }
 
+        public async Task<List<UserAsset>> GetAssetsForCurrentUser(string userName)
+        {
+            var assets = new List<UserAsset>();
+
+            var userRoleIds = GetRolesByKoboUsername(userName);
+
+            foreach (var userRoleId in userRoleIds)
+            {
+                var currentRoleToAssets = await applicationDbContext
+                                                    .RoleToAssets
+                                                    .Include(p => p.Asset)
+                                                    .Where(p => p.RoleId == Convert.ToInt32(userRoleId)).ToListAsync();
+
+                foreach (var assetInRole in currentRoleToAssets)
+                {
+                    if ( ! assets.Any(p => p.AssetId == assetInRole.AssetId))
+                    {
+                        assets.Add(new UserAsset
+                        {
+                            AssetId = assetInRole.AssetId,
+                            Name = assetInRole.Asset.Name,
+                            ParentId = assetInRole.Asset.ParentId,
+                            Path = assetInRole.Asset.Path,
+                            Type = assetInRole.Asset.Type
+                        });
+                    }
+                }
+            }
+
+            return assets;
+        }
         private OrganizationSimpleForLogin GetOrganizationResponse(Organization org)
         {
             var organizationResponse = new OrganizationSimpleForLogin()

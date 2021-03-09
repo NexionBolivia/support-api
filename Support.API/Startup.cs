@@ -22,11 +22,15 @@ namespace Support.Api
             services.ConfigureDatabases(Configuration);
             services.ConfigureAuthentication(Configuration);
             services.ConfigureCors();
+                       
             services.AddControllers();
+            
             services.AddScoped<IProfileService, ProfileService>(); // register service
             services.AddScoped<IKoboUserService, KoboUserService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
+            
             services.AddHttpClient();
+            services.AddHttpContextAccessor();
             services.AddControllers().AddNewtonsoftJson();
         }
 
