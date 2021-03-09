@@ -10,7 +10,6 @@ namespace Support.API.Services.Data
     {
         public ApplicationDbContext()
         {
-            //this.Database.EnsureCreated();
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -31,5 +30,6 @@ namespace Support.API.Services.Data
 
         public DbSet<RoleToKoboUser> RolesToKoboUsers { get; set; }
         public DbSet<OrganizationToKoboUser> OrganizationsToKoboUsers { get; set; }
+        public DbSet<RoleToAsset> RoleToAssets { get; set; }
     }
 }

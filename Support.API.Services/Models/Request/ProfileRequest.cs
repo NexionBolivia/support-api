@@ -6,13 +6,8 @@ namespace Support.API.Services.Models.Request
 {
     public class ProfileRequest
     {
-        // SupportApiUser Fields
-        public string Username { get; set; }
-
-        public string Password { get; set; }
-
-        // Organization Fields
-        public string Name { get; set; }
+        public string ProfileId { get; set; }
+        public string OrganizationId { get; set; }
 
         // Profile Fields
         public string Formation { get; set; }

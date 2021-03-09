@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
 using Support.API.Services.Data;
+using Support.API.Services.KoboData;
 using Support.API.Services.Models;
 using Support.API.Services.Models.Request;
-using Support.API.Services.KoboData;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Support.API.Services.Services
 {
@@ -16,7 +15,8 @@ namespace Support.API.Services.Services
         private readonly ApplicationDbContext applicationDbContext;
         private readonly KoboDbContext koboDbContext;
 
-        public KoboUserService(ApplicationDbContext appContext, KoboDbContext koboContext)
+        public KoboUserService(ApplicationDbContext appContext, 
+            KoboDbContext koboContext)
         {
             this.applicationDbContext = appContext;
             this.koboDbContext = koboContext;
@@ -33,10 +33,10 @@ namespace Support.API.Services.Services
                 detail.Username = kuser.UserName;
 
                 //Get Roles
-                var roleList = new List<string>();
+                detail.Roles = new List<string>();
                 foreach(RoleToKoboUser role in applicationDbContext.RolesToKoboUsers.Where(x => x.KoboUserId == kuser.Id))
                 {
-                    roleList.Add(role.RoleId.ToString());
+                    detail.Roles.Add(role.RoleId.ToString());
                 }
 
                 //Get Organizations
@@ -76,7 +76,6 @@ namespace Support.API.Services.Services
                                 RoleId = Int32.Parse(role)
                             });
                         }
-                        response = true;
                     }
                 }
                 if ((object)request.Organizations != (object)null)
@@ -92,12 +91,125 @@ namespace Support.API.Services.Services
                                 OrganizationId = Int32.Parse(organization)
                             });
                         }
-                        response = true;
                     }
                 }
+                response = true;
             }
             this.applicationDbContext.SaveChanges();
             return response;
+        }
+
+        public IEnumerable<OrganizationSimple> GetOrganizationsByKoboUsername(string username)
+        {
+            var response = new List<OrganizationSimple>();
+            var kuser = koboDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
+
+            if(kuser != null)
+            {
+                var koboUsers = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.KoboUserId == kuser.Id).ToList();
+                foreach(OrganizationToKoboUser user in koboUsers)
+                {
+                    var org = applicationDbContext.Organizations.Where(x => x.OrganizationId == user.OrganizationId).FirstOrDefault();
+                    if(org != null)
+                    {
+                        var orgs = this.GetOrganizationResponse(org);
+                        if(orgs != null)
+                        {
+                            foreach(OrganizationSimpleForLogin orgLogin in orgs.Organizations)
+                            {
+                                var simple = new OrganizationSimple()
+                                {
+                                    OrganizationId = orgLogin.OrganizationId,
+                                    Name = orgLogin.Name,
+                                    Color = orgLogin.Color,
+                                    ProfileId = orgLogin.ProfileId
+                                };
+
+                                if(response.Find(x => x.OrganizationId == simple.OrganizationId) == null)
+                                {
+                                    response.Add(simple);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return response.OrderBy(x => x.Name);
+        }
+
+        public IEnumerable<string> GetRolesByKoboUsername(string username)
+        {
+            var response = new List<string>();
+            var kuser = koboDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
+
+            if (kuser != null)
+            {
+                var koboUsers = applicationDbContext.RolesToKoboUsers.Where(x => x.KoboUserId == kuser.Id).ToList();
+                foreach (RoleToKoboUser user in koboUsers)
+                {
+                    var role = applicationDbContext.Roles.Where(x => x.RoleId == user.RoleId).FirstOrDefault();
+                    if (role != null)
+                    {
+                        response.Add(role.RoleId.ToString());
+                    }
+                }
+            }
+
+            return response;
+        }
+
+        public async Task<List<UserAsset>> GetAssetsForCurrentUser(string userName)
+        {
+            var assets = new List<UserAsset>();
+
+            var userRoleIds = GetRolesByKoboUsername(userName);
+
+            foreach (var userRoleId in userRoleIds)
+            {
+                var currentRoleToAssets = await applicationDbContext
+                                                    .RoleToAssets
+                                                    .Include(p => p.Asset)
+                                                    .Where(p => p.RoleId == Convert.ToInt32(userRoleId)).ToListAsync();
+
+                foreach (var assetInRole in currentRoleToAssets)
+                {
+                    if ( ! assets.Any(p => p.AssetId == assetInRole.AssetId))
+                    {
+                        assets.Add(new UserAsset
+                        {
+                            AssetId = assetInRole.AssetId,
+                            Name = assetInRole.Asset.Name,
+                            ParentId = assetInRole.Asset.ParentId,
+                            Path = assetInRole.Asset.Path,
+                            Type = assetInRole.Asset.Type
+                        });
+                    }
+                }
+            }
+
+            return assets;
+        }
+        private OrganizationSimpleForLogin GetOrganizationResponse(Organization org)
+        {
+            var organizationResponse = new OrganizationSimpleForLogin()
+            {
+                OrganizationId = org.OrganizationId.ToString(),
+                Name = org.Name,
+                Color = org.Color,
+                ProfileId = org.IdProfile.ToString(),
+                Organizations = new List<OrganizationSimpleForLogin>(),
+            };
+
+            var orgs = applicationDbContext.Organizations.Where(x => x.ParentId == org.OrganizationId).ToList();
+            foreach (Organization organization in orgs)
+            {
+                organizationResponse.Organizations.Add(this.GetOrganizationResponse(organization));
+            }
+
+            organizationResponse.Organizations.Add(organizationResponse);
+
+            return organizationResponse;
         }
 
         private void DeleteAllOrganizationsFromKoboUser(string koboUserId)

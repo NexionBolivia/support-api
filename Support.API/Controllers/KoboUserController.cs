@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Support.API.Services.Data;
-using Support.API.Services.KoboData;
+using Support.API.Services.Extensions;
 using Support.API.Services.Models.Request;
 using Support.API.Services.Services;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Support.Api.Controllers
 {
@@ -14,16 +14,14 @@ namespace Support.Api.Controllers
     [Route("[controller]")]
     public class KoboUserController : ControllerBase
     {
-
-        private readonly ApplicationDbContext applicationDbContext;
-        private readonly KoboDbContext koboDbContext;
         private readonly IKoboUserService koboUserService;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public KoboUserController(ApplicationDbContext appContext, KoboDbContext koboContext)
+        public KoboUserController(IKoboUserService koboUserService,
+            IHttpContextAccessor httpContextAccessor)
         {
-            this.applicationDbContext = appContext;
-            this.koboDbContext = koboContext;
-            this.koboUserService = new KoboUserService(appContext, koboContext);
+            this.koboUserService = koboUserService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -50,6 +48,20 @@ namespace Support.Api.Controllers
                 actionResult = this.Ok();
             }
             return actionResult;
+        }
+
+        [HttpGet]
+        [Route("UserResources")]
+        public async Task<IActionResult> GetUserResources()
+        {
+            var userName = httpContextAccessor.HttpContext.GetCurrentUserName(); // For loggedIn user only
+            var assetsForUser = await koboUserService.GetAssetsForCurrentUser(userName);
+            var organizationsForUser = koboUserService.GetOrganizationsByKoboUsername(userName);
+            return Ok(
+                new { 
+                    assets = assetsForUser,
+                    organizations = organizationsForUser
+                });
         }
     }
 }

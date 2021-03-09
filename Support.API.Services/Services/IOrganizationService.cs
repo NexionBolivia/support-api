@@ -7,7 +7,7 @@ namespace Support.API.Services.Services
 {
     public interface IOrganizationService
     {
-        bool CreateUpdateOrganization(OrganizationRequest org);
+        string CreateUpdateOrganization(OrganizationRequest org);
         IEnumerable<OrganizationResponse> GetAll();
         bool DeleteOrganization(string organizationId);
     }

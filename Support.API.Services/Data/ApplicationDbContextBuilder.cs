@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Support.API.Services.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Support.API.Services.Data
 {
