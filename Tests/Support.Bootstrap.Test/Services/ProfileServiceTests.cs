@@ -6,6 +6,7 @@ using Support.API.Services.Data;
 using Support.API.Services.Extensions;
 using Support.API.Services.Services;
 using Support.API.Services.Models.Request;
+using FluentAssertions;
 
 namespace Support.API.Services.Test.Services
 {
@@ -36,19 +37,19 @@ namespace Support.API.Services.Test.Services
         [Test]
         public void GetProfiles_Empty_Username_Test()
         {
-            Assert.AreEqual(0, profileService.GetProfiles().Count());
+            profileService.GetProfiles().Count().Should().Be(0);
         }
 
         [Test]
         public void GetProfiles_Wrong_Username_Test()
         {
-            Assert.AreEqual(0, profileService.GetProfile(10).ProfileId);
+            profileService.GetProfile(10).ProfileId.Should().Be("0");
         }
 
         [Test]
         public void GetProfiles_Select_All_Test()
         {
-            Assert.Greater(profileService.GetProfiles().Count(), 1);
+            profileService.GetProfiles().Count().Should().BeGreaterThan(1);
         }
 
         [Test]
@@ -72,13 +73,13 @@ namespace Support.API.Services.Test.Services
                 Latrines = 1,
                 ServiceContinuity = "ServCont1"
             };
-            Assert.AreEqual(profileService.CreateUpdateProfile(request), true);
+            profileService.CreateUpdateProfile(request).Should().Be("1");
         }
 
         [Test]
         public void CreateProfile_Result_False_Test()
         {
-            Assert.AreEqual(profileService.CreateUpdateProfile(null), false);
+            profileService.CreateUpdateProfile(null).Should().Be(string.Empty);
         }
 
         [Test]
@@ -103,13 +104,13 @@ namespace Support.API.Services.Test.Services
                 Latrines = 1,
                 ServiceContinuity = "ServCont2"
             };
-            Assert.AreEqual(profileService.CreateUpdateProfile(request), true);
+            profileService.CreateUpdateProfile(request).Should().Be("1");
         }
 
         [Test]
         public void UpdateProfile_Result_False_Test()
         {
-            Assert.AreEqual(profileService.CreateUpdateProfile(null), false);
+            profileService.CreateUpdateProfile(null).Should().Be(string.Empty);
         }
     }
 }

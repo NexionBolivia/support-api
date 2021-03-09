@@ -99,7 +99,6 @@ namespace Support.API.Services.Services
             return response;
         }
 
-
         public IEnumerable<OrganizationSimple> GetOrganizationsByKoboUsername(string username)
         {
             var response = new List<OrganizationSimple>();
@@ -113,17 +112,30 @@ namespace Support.API.Services.Services
                     var org = applicationDbContext.Organizations.Where(x => x.OrganizationId == user.OrganizationId).FirstOrDefault();
                     if(org != null)
                     {
-                        var orgResponse = new OrganizationSimple();
-                        orgResponse.OrganizationId = org.OrganizationId.ToString();
-                        orgResponse.Name = org.Name;
-                        orgResponse.Color = org.Color;
-                        orgResponse.ProfileId = org.IdProfile.ToString();
-                        response.Add(orgResponse);
+                        var orgs = this.GetOrganizationResponse(org);
+                        if(orgs != null)
+                        {
+                            foreach(OrganizationSimpleForLogin orgLogin in orgs.Organizations)
+                            {
+                                var simple = new OrganizationSimple()
+                                {
+                                    OrganizationId = orgLogin.OrganizationId,
+                                    Name = orgLogin.Name,
+                                    Color = orgLogin.Color,
+                                    ProfileId = orgLogin.ProfileId
+                                };
+
+                                if(response.Find(x => x.OrganizationId == simple.OrganizationId) == null)
+                                {
+                                    response.Add(simple);
+                                }
+                            }
+                        }
                     }
                 }
             }
 
-            return response;
+            return response.OrderBy(x => x.Name);
         }
 
         public IEnumerable<string> GetRolesByKoboUsername(string username)
@@ -145,6 +157,28 @@ namespace Support.API.Services.Services
             }
 
             return response;
+        }
+
+        private OrganizationSimpleForLogin GetOrganizationResponse(Organization org)
+        {
+            var organizationResponse = new OrganizationSimpleForLogin()
+            {
+                OrganizationId = org.OrganizationId.ToString(),
+                Name = org.Name,
+                Color = org.Color,
+                ProfileId = org.IdProfile.ToString(),
+                Organizations = new List<OrganizationSimpleForLogin>(),
+            };
+
+            var orgs = applicationDbContext.Organizations.Where(x => x.ParentId == org.OrganizationId).ToList();
+            foreach (Organization organization in orgs)
+            {
+                organizationResponse.Organizations.Add(this.GetOrganizationResponse(organization));
+            }
+
+            organizationResponse.Organizations.Add(organizationResponse);
+
+            return organizationResponse;
         }
 
         private void DeleteAllOrganizationsFromKoboUser(string koboUserId)
