@@ -14,14 +14,11 @@ namespace Support.Api.Controllers
     [Route("[controller]/[action]")]
     public class ProfileController : ControllerBase
     {
-        private readonly ApplicationDbContext context;
         private readonly IProfileService profileService;
 
-
-        public ProfileController(ApplicationDbContext context)
+        public ProfileController(IProfileService profileService)
         {
-            this.context = context;
-            this.profileService = new ProfileService(context);
+            this.profileService = profileService;
         }
 
         [HttpGet]

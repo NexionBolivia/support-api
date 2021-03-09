@@ -15,15 +15,11 @@ namespace Support.Api.Controllers
     [Route("[controller]/[action]")]
     public class OrganizationController : ControllerBase
     {
-
-        private readonly ApplicationDbContext applicationDbContext;
         private readonly IOrganizationService organizationService;
 
-
-        public OrganizationController(ApplicationDbContext appContext)
+        public OrganizationController(IOrganizationService organizationService)
         {
-            this.applicationDbContext = appContext;
-            this.organizationService = new OrganizationService(appContext);
+            this.organizationService = organizationService;
         }
 
         [HttpGet]

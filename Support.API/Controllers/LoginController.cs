@@ -22,16 +22,12 @@ namespace Support.Api.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _config;
-        private readonly ApplicationDbContext applicationDbContext;
-        private readonly KoboDbContext koboDbContext;
         private readonly IKoboUserService koboUserService;
 
-        public LoginController(IConfiguration config, ApplicationDbContext appContext, KoboDbContext koboDbContext)
+        public LoginController(IConfiguration config, IKoboUserService koboUserService)
         {
             _config = config;
-            this.applicationDbContext = appContext;
-            this.koboDbContext = koboDbContext;
-            this.koboUserService = new KoboUserService(appContext, koboDbContext);
+            this.koboUserService = koboUserService;
         }
 
         [HttpPost]
