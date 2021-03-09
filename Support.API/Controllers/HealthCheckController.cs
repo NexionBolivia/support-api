@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Support.API.Services.Data;
 using Support.API.Services.Extensions;
 using Support.API.Services.KoboData;
@@ -54,6 +55,13 @@ namespace Support.Api.Controllers
         {
             _dbContext.SeedData(false);
 
+            return Ok("ok");
+        }
+
+        [Route("check-token")]
+        [Authorize]
+        public IActionResult AutorizedCall()
+        {
             return Ok("ok");
         }
     }
