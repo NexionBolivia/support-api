@@ -14,16 +14,11 @@ namespace Support.Api.Controllers
     [Route("[controller]")]
     public class KoboUserController : ControllerBase
     {
-
-        private readonly ApplicationDbContext applicationDbContext;
-        private readonly KoboDbContext koboDbContext;
         private readonly IKoboUserService koboUserService;
 
-        public KoboUserController(ApplicationDbContext appContext, KoboDbContext koboContext)
+        public KoboUserController(IKoboUserService koboUserService)
         {
-            this.applicationDbContext = appContext;
-            this.koboDbContext = koboContext;
-            this.koboUserService = new KoboUserService(appContext, koboContext);
+            this.koboUserService = koboUserService;
         }
 
         [HttpGet]

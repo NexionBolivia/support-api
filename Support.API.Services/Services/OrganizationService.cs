@@ -20,9 +20,9 @@ namespace Support.API.Services.Services
             this.applicationDbContext = appContext;
         }
 
-        public bool CreateUpdateOrganization(OrganizationRequest request)
+        public string CreateUpdateOrganization(OrganizationRequest request)
         {
-            var response = false;
+            var response = string.Empty;
             if(response != null)
             {
                 if (string.IsNullOrEmpty(request.OrganizationId)) //insert
@@ -40,7 +40,8 @@ namespace Support.API.Services.Services
                     
                     applicationDbContext.Organizations.Add(org);
                     SaveMembersForOrganization(org.OrganizationId, request.Members);
-                    response = true;
+                    applicationDbContext.SaveChanges();
+                    response = org.OrganizationId.ToString();
                 }
                 else //update
                 {
@@ -58,11 +59,11 @@ namespace Support.API.Services.Services
                     applicationDbContext.Organizations.Update(org);
                     DeleteAllMembersFromOrganization(request.OrganizationId);
                     SaveMembersForOrganization(org.OrganizationId, request.Members);
-                    response = true;
+                    applicationDbContext.SaveChanges();
+                    response = org.OrganizationId.ToString();
                 }
             }
-
-            applicationDbContext.SaveChanges();
+            
             return response;
         }
 
@@ -88,15 +89,14 @@ namespace Support.API.Services.Services
                 Members = new List<string>()
             };
 
-            if (org.ParentId != null && !string.IsNullOrEmpty(org.ParentId.ToString()))
+            //Organizations
+            var orgs = applicationDbContext.Organizations.Where(x => x.ParentId == org.OrganizationId).ToList();
+            foreach (Organization organization in orgs)
             {
-                var orgs = applicationDbContext.Organizations.Where(x => x.OrganizationId == org.ParentId).ToList();
-                foreach (Organization organization in orgs)
-                {
-                    organizationResponse.Organizations.Add(this.GetResponse(organization));
-                }
+                organizationResponse.Organizations.Add(this.GetResponse(organization));
             }
 
+            //Members
             var koboUsers = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.OrganizationId == org.OrganizationId).ToList();
             foreach (OrganizationToKoboUser organizationToKoboUser in koboUsers)
             {

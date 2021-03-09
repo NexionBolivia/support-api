@@ -9,5 +9,7 @@ namespace Support.API.Services.Services
     {
         IEnumerable<KoboUserDetail> GetAll();
         bool UpdateKoboUser(KoboUserRequest request);
+        IEnumerable<OrganizationSimple> GetOrganizationsByKoboUsername(string username);
+        IEnumerable<string> GetRolesByKoboUsername(string username);
     }
 }
