@@ -8,6 +8,7 @@ using Support.API.Services.Data;
 using Support.API.Services.Models;
 using Support.API.Services.Models.Request;
 using Support.API.Services.KoboData;
+using System.Threading.Tasks;
 
 namespace Support.API.Services.Services
 {
@@ -20,7 +21,7 @@ namespace Support.API.Services.Services
             this.applicationDbContext = appContext;
         }
 
-        public IEnumerable<RoleResponse> GetAll()
+        public Task<List<RoleResponse>> GetAll()
         {
             var list = new List<RoleResponse>();
             foreach (Role rol in applicationDbContext.Roles)
@@ -32,7 +33,7 @@ namespace Support.API.Services.Services
                 });
             }
 
-            return list;
+            return Task.FromResult(list);
         }
     }
 }

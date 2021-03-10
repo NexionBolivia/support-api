@@ -7,6 +7,7 @@ using Support.API.Services.Models.Request;
 using Support.API.Services.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Support.Api.Controllers
 {
@@ -24,9 +25,9 @@ namespace Support.Api.Controllers
 
         [HttpGet]
         [ActionName("All")]
-        public ActionResult GetAll()
+        public async Task<ActionResult> GetAll()
         {
-            return Ok(this.roleService.GetAll());
+            return Ok(await this.roleService.GetAll());
         }
     }
 }
