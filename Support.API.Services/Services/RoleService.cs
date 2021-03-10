@@ -10,7 +10,6 @@ using Support.API.Services.Models.Request;
 using Support.API.Services.KoboData;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
 
 namespace Support.API.Services.Services
 {
@@ -23,7 +22,7 @@ namespace Support.API.Services.Services
             this.applicationDbContext = appContext;
         }
 
-        public async Task<IList> GetAll()
+        public async Task<List<RoleResponse>> GetAll()
         {
             var list = new List<RoleResponse>();
             var roles = await applicationDbContext.Roles.ToListAsync();
