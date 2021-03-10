@@ -9,6 +9,8 @@ using Support.API.Services.Models;
 using Support.API.Services.Models.Request;
 using Support.API.Services.KoboData;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Collections;
 
 namespace Support.API.Services.Services
 {
@@ -21,10 +23,11 @@ namespace Support.API.Services.Services
             this.applicationDbContext = appContext;
         }
 
-        public Task<List<RoleResponse>> GetAll()
+        public async Task<IList> GetAll()
         {
             var list = new List<RoleResponse>();
-            foreach (Role rol in applicationDbContext.Roles)
+            var roles = await applicationDbContext.Roles.ToListAsync();
+            foreach (Role rol in roles)
             {
                 list.Add(new RoleResponse()
                 {
@@ -33,7 +36,7 @@ namespace Support.API.Services.Services
                 });
             }
 
-            return Task.FromResult(list);
+            return list;
         }
     }
 }
