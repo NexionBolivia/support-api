@@ -28,7 +28,8 @@ namespace Support.Api
             services.AddScoped<IProfileService, ProfileService>(); // register service
             services.AddScoped<IKoboUserService, KoboUserService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
-            
+            services.AddScoped<IRoleService, RoleService>();
+
             services.AddHttpClient();
             services.AddHttpContextAccessor();
             services.AddControllers().AddNewtonsoftJson();

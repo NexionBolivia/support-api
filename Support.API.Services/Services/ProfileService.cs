@@ -115,6 +115,17 @@ namespace Support.API.Services.Services
 
                     context.OrganizationProfiles.Add(profile);
                     context.SaveChanges();
+
+                    if (!string.IsNullOrEmpty(data.OrganizationId))
+                    {
+                        var org = context.Organizations.Where(x => x.OrganizationId == int.Parse(data.OrganizationId)).FirstOrDefault();
+                        if (org != null)
+                        {
+                            org.IdProfile = profile.ProfileId;
+                            context.Organizations.Update(org);
+                            context.SaveChanges();
+                        }
+                    }
                     response = profile.ProfileId.ToString();
                 }
                 else
@@ -136,12 +147,6 @@ namespace Support.API.Services.Services
                         profile.PublicPools = data.PublicPools;
                         profile.Latrines = data.Latrines;
                         profile.ServiceContinuity = data.ServiceContinuity;
-
-                        if (!string.IsNullOrEmpty(data.OrganizationId))
-                        {
-                            profile.OrganizationId = int.Parse(data.OrganizationId);
-                        }
-
                         context.OrganizationProfiles.Update(profile);
                         context.SaveChanges();
                         response = profile.ProfileId.ToString();
