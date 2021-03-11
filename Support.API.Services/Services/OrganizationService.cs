@@ -84,7 +84,7 @@ namespace Support.API.Services.Services
                 OrganizationId = org.OrganizationId.ToString(),
                 Name = org.Name,
                 Color = org.Color,
-                ProfileId = org.IdProfile != null ? org.IdProfile.ToString() : "",
+                ProfileId = org.IdProfile != null ? org.IdProfile.ToString() : null,
                 Organizations = new List<OrganizationResponse>(),
                 Members = new List<string>()
             };
@@ -112,10 +112,35 @@ namespace Support.API.Services.Services
             if(!string.IsNullOrEmpty(organizationId))
             {
                 var orgs = applicationDbContext.Organizations.Where(x => x.ParentId == int.Parse(organizationId)).ToList();
+                foreach(Organization corg in orgs)
+                {
+                    if(corg.IdProfile != null)
+                    {
+                        var profile = applicationDbContext.OrganizationProfiles.FirstOrDefault(x => x.ProfileId == corg.IdProfile);
+                        if(profile != null)
+                        {
+                            applicationDbContext.OrganizationProfiles.Remove(profile);
+                        }
+                    }
+                }
+
                 applicationDbContext.Organizations.RemoveRange(orgs);
 
                 var org = applicationDbContext.Organizations.FirstOrDefault(x => x.OrganizationId == int.Parse(organizationId));
-                applicationDbContext.Organizations.Remove(org);
+                if(org != null)
+                {
+                    if (org.IdProfile != null)
+                    {
+                        var profileOrg = applicationDbContext.OrganizationProfiles.FirstOrDefault(x => x.ProfileId == org.IdProfile);
+                        if (profileOrg != null)
+                        {
+                            applicationDbContext.OrganizationProfiles.Remove(profileOrg);
+                        }
+                    }
+
+                    applicationDbContext.Organizations.Remove(org);
+                }
+                
                 applicationDbContext.SaveChanges();
                 response = true;
             }

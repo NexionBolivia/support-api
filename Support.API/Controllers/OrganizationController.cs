@@ -26,17 +26,7 @@ namespace Support.Api.Controllers
         [ActionName("All")]
         public ActionResult GetAll()
         {
-            ActionResult actionResult;
-            IEnumerable<OrganizationResponse> all = this.organizationService.GetAll();
-            if (Enumerable.Count<OrganizationResponse>(all) <= 0)
-            {
-                actionResult = this.StatusCode(204);
-            }
-            else
-            {
-                actionResult = this.Ok(all);
-            }
-            return actionResult;
+            return Ok(this.organizationService.GetAll());
         }
 
         [HttpGet]
