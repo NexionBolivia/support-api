@@ -12,12 +12,12 @@ public static class LocalDb
         { "SUPPORT_DB_USER", "user" },
         { "SUPPORT_DB_PASSWORD", "password" },
 
-        { "KOBO_DB_SERVER", "192.168.56.101" },
-        { "KOBO_DB_PORT", "5435"},
+        { "KOBO_DB_SERVER", "192.168.100.3" },
+        { "KOBO_DB_PORT", "5432"},
         { "KOBO_DB_NAME", "koboform"},
         { "KOBO_DB_USER", "kobo"},
-        { "KOBO_DB_PASSWORD", "{nNJ12.nY6ev"},
+        { "KOBO_DB_PASSWORD", "bm@uuNVJ57')"},
 
-        { "KOBO_API_SERVER", "https://kf.nexion-dev.tk" }
+        { "KOBO_API_SERVER", "http://kf.kobo.local" }
     };
 }

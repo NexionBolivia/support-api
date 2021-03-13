@@ -12,7 +12,7 @@ namespace Support.API.Services.Services
         bool UpdateKoboUser(KoboUserRequest request);
 
         IEnumerable<OrganizationSimple> GetOrganizationsByKoboUsername(string username);
-        
+        Task<int> GetKoboUserIdForKoboUsername(string username);
         IEnumerable<string> GetRolesByKoboUsername(string username);
 
         Task<List<UserAsset>> GetAssetsForCurrentUser(string userName);

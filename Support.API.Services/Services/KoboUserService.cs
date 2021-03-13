@@ -106,32 +106,19 @@ namespace Support.API.Services.Services
 
             if(kuser != null)
             {
-                var koboUsers = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.KoboUserId == kuser.Id).ToList();
-                foreach(OrganizationToKoboUser user in koboUsers)
+                //Get Organizations
+                var orgKoboUserList = applicationDbContext.OrganizationsToKoboUsers.Where(x => x.KoboUserId == kuser.Id).ToList();
+                foreach (OrganizationToKoboUser orgToKobo in orgKoboUserList)
                 {
-                    var org = applicationDbContext.Organizations.Where(x => x.OrganizationId == user.OrganizationId).FirstOrDefault();
-                    if(org != null)
-                    {
-                        var orgs = this.GetOrganizationResponse(org);
-                        if(orgs != null)
+                    var org = applicationDbContext.Organizations.FirstOrDefault(x => x.OrganizationId == orgToKobo.OrganizationId);
+                    if (org != null)
+                        response.Add(new OrganizationSimple()
                         {
-                            foreach(OrganizationSimpleForLogin orgLogin in orgs.Organizations)
-                            {
-                                var simple = new OrganizationSimple()
-                                {
-                                    OrganizationId = orgLogin.OrganizationId,
-                                    Name = orgLogin.Name,
-                                    Color = orgLogin.Color,
-                                    ProfileId = orgLogin.ProfileId
-                                };
-
-                                if(response.Find(x => x.OrganizationId == simple.OrganizationId) == null)
-                                {
-                                    response.Add(simple);
-                                }
-                            }
-                        }
-                    }
+                            OrganizationId = orgToKobo.OrganizationId.ToString(),
+                            Name = org.Name,
+                            Color = org.Color,
+                            ProfileId = org.IdProfile.ToString()
+                        });
                 }
             }
 
@@ -189,6 +176,15 @@ namespace Support.API.Services.Services
             }
 
             return assets;
+        }
+        public async Task<int> GetKoboUserIdForKoboUsername(string username)
+        {
+            int response=-1;
+            var kuser = koboDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
+
+            if (kuser != null) response = kuser.Id;
+
+            return response;
         }
         private OrganizationSimpleForLogin GetOrganizationResponse(Organization org)
         {
