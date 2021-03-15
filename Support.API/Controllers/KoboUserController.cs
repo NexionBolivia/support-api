@@ -55,10 +55,12 @@ namespace Support.Api.Controllers
         public async Task<IActionResult> GetUserResources()
         {
             var userName = httpContextAccessor.HttpContext.GetCurrentUserName(); // For loggedIn user only
+            var koboUserId = await koboUserService.GetKoboUserIdForKoboUsername(userName);
             var assetsForUser = await koboUserService.GetAssetsForCurrentUser(userName);
             var organizationsForUser = koboUserService.GetOrganizationsByKoboUsername(userName);
             return Ok(
-                new { 
+                new {
+                    koboUserId = koboUserId,
                     assets = assetsForUser,
                     organizations = organizationsForUser
                 });
