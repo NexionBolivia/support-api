@@ -2,7 +2,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Support.API.Services.Helpers;
-using Support.API.Services.KoboData;
+using Support.API.Services.KoboFormData;
 using System;
 using System.Linq;
 
@@ -11,7 +11,7 @@ namespace Support.API.Services.IntegrationTests
     public class KoboDbContextTest
     {
         internal IServiceProvider provider;
-        private KoboDbContext dbContext;
+        private KoboFormDbContext dbContext;
 
         [OneTimeSetUp]
         public void Setup()
@@ -28,7 +28,7 @@ namespace Support.API.Services.IntegrationTests
         [Test]
         public void GetAllUsers_UsingKoboDbContext()
         {
-            using (dbContext = provider.GetRequiredService<KoboDbContext>())
+            using (dbContext = provider.GetRequiredService<KoboFormDbContext>())
             {
                 var users = dbContext.KoboUsers.ToList();
 
@@ -49,8 +49,9 @@ namespace Support.API.Services.IntegrationTests
             var configuration = ConnectionHelper.GetConfiguration();
 
             serviceCollection.AddHttpContextAccessor(); // Used on DbContext
-            serviceCollection.ConfigureKoboDatabase(configuration);
-            
+            serviceCollection.ConfigureKoboFormDatabase(configuration);
+            serviceCollection.ConfigureKoboCatDatabase(configuration);
+
             return serviceCollection.BuildServiceProvider();
         }
     }

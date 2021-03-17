@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Support.API.Services.Data;
-using Support.API.Services.KoboData;
+using Support.API.Services.KoboCatData;
+using Support.API.Services.KoboFormData;
 using Support.API.Services.Models;
 using Support.API.Services.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Support.API.Services.Services
@@ -13,20 +15,23 @@ namespace Support.API.Services.Services
     public class KoboUserService : IKoboUserService
     {
         private readonly ApplicationDbContext applicationDbContext;
-        private readonly KoboDbContext koboDbContext;
+        private readonly KoboFormDbContext koboFormDbContext;
+        private readonly KoboCatDbContext koboCatContext;
 
         public KoboUserService(ApplicationDbContext appContext, 
-            KoboDbContext koboContext)
+            KoboFormDbContext koboFormContext,
+            KoboCatDbContext koboCatContext)
         {
             this.applicationDbContext = appContext;
-            this.koboDbContext = koboContext;
+            this.koboFormDbContext = koboFormContext;
+            this.koboCatContext = koboCatContext;
         }
 
         public IEnumerable<KoboUserDetail> GetAll()
         {
             var response = new List<KoboUserDetail>();
 
-            foreach(KoboUser kuser in koboDbContext.KoboUsers.ToList())
+            foreach(KoboUser kuser in koboFormDbContext.KoboUsers.ToList())
             {
                 var detail = new KoboUserDetail();
                 detail.Id = kuser.Id.ToString();
@@ -102,7 +107,7 @@ namespace Support.API.Services.Services
         public IEnumerable<OrganizationSimple> GetOrganizationsByKoboUsername(string username)
         {
             var response = new List<OrganizationSimple>();
-            var kuser = koboDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
+            var kuser = koboFormDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
 
             if(kuser != null)
             {
@@ -128,7 +133,7 @@ namespace Support.API.Services.Services
         public IEnumerable<string> GetRolesByKoboUsername(string username)
         {
             var response = new List<string>();
-            var kuser = koboDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
+            var kuser = koboFormDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
 
             if (kuser != null)
             {
@@ -181,13 +186,113 @@ namespace Support.API.Services.Services
         public async Task<int> GetKoboUserIdForKoboUsername(string username)
         {
             int response=-1;
-            var kuser = koboDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
+            var kuser = koboFormDbContext.KoboUsers.Where(x => x.UserName == username).FirstOrDefault();
 
             if (kuser != null) response = kuser.Id;
 
             return response;
         }
-        
+
+        public async Task<string> SetFirstLoginToken(string userName)
+        {
+            string key = null;
+            var user = await koboFormDbContext.KoboUsers.FirstOrDefaultAsync(p => p.UserName == userName);
+
+            if (user != null)
+            {
+                var tokenOnKoboCat = await koboCatContext.AuthTokens.FirstOrDefaultAsync(p => p.UserId == user.Id);
+                var tokenOnKoboForm = await koboFormDbContext.AuthTokens.FirstOrDefaultAsync(p => p.UserId == user.Id);
+
+                if (tokenOnKoboCat == null && tokenOnKoboForm == null)
+                {
+                    key = GenerateToken();
+                    // Saves on KoboCat DB
+                    tokenOnKoboCat = new KoboCatAuthToken
+                    {
+                        Created = DateTime.UtcNow,
+                        UserId = user.Id,
+                        Key = key
+                    };
+                    koboCatContext.Add(tokenOnKoboCat);
+                    await koboCatContext.SaveChangesAsync();
+
+                    // Saves on KoboForm DB
+                    tokenOnKoboForm = new KoboFormAuthToken
+                    {
+                        Created = DateTime.UtcNow,
+                        UserId = user.Id,
+                        Key = key
+                    };
+                    koboFormDbContext.Add(tokenOnKoboForm);
+                    await koboFormDbContext.SaveChangesAsync();
+                }
+                else if (
+                        (tokenOnKoboCat == null && tokenOnKoboForm != null)
+                    || (tokenOnKoboCat != null && tokenOnKoboForm == null))
+                {
+                    throw new ApplicationException($"Error with authtoken_token table. User on KoboForm db: { (tokenOnKoboForm == null ? "Does not exist" : "Exist") }. User on KoboCat db: { (tokenOnKoboCat == null ? "Does not exist" : "Exist") }");
+                }
+            }
+            return key;
+        }
+
+        public async Task<string> ActivateUser(string userName)
+        {
+            var userDetail = new StringBuilder();
+            userDetail.Append($"User: {userName}");
+
+            userDetail.Append(", koboForm: ");
+            var userOnKoboForm = await koboFormDbContext.KoboUsers.FirstOrDefaultAsync(p => p.UserName == userName);
+
+            if (userOnKoboForm == null)
+                userDetail.Append("NOT EXIST!");
+            else {
+                if (!userOnKoboForm.IsActive)
+                {
+                    userOnKoboForm.IsActive = true;
+                    koboFormDbContext.Update(userOnKoboForm);
+                    await koboFormDbContext.SaveChangesAsync();
+                    userDetail.Append("updated, ");
+                }
+                userDetail.Append($"IsActive={ userOnKoboForm.IsActive }");
+            }
+
+            userDetail.Append(", koboCat: ");
+
+            var userOnKoboCat = await koboCatContext.KoboCatUsers.FirstOrDefaultAsync(p => p.UserName == userName);
+
+            if (userOnKoboCat == null)
+                userDetail.Append("NOT EXIST!");
+            else
+            {
+                if (!userOnKoboCat.IsActive)
+                {
+                    userOnKoboCat.IsActive = true;
+                    koboCatContext.Update(userOnKoboCat);
+                    await koboCatContext.SaveChangesAsync();
+                    userDetail.Append("updated, ");
+                }
+                userDetail.Append($"IsActive={ userOnKoboCat.IsActive }");
+            }
+
+            return userDetail.ToString();
+        }
+
+        private string GenerateToken()
+        {
+            string key = null;
+            using (var rijndael = System.Security.Cryptography.Rijndael.Create())
+            {
+                rijndael.GenerateKey();
+                key = Convert.ToBase64String(rijndael.Key);
+            }
+
+            if(key.Length > 40)
+                key = key.Substring(0, 40);
+
+            return key;
+        }
+
         private OrganizationSimpleForLogin GetOrganizationResponse(Organization org)
         {
             var organizationResponse = new OrganizationSimpleForLogin()

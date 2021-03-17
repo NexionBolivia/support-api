@@ -82,5 +82,13 @@ namespace Support.Api.Controllers
                     organizations = organizationsForUser
                 });
         }
+
+        [HttpPost]
+        [Route("activate-user")]
+        public async Task<ActionResult> ActivateUser([FromBody] ActivateUserRequest request)
+        {
+            var result = await koboUserService.ActivateUser(request.UserName);
+            return Ok(result);
+        }
     }
 }
