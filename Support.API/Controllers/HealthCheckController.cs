@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Support.API.Services.Data;
 using Support.API.Services.Extensions;
-using Support.API.Services.KoboData;
+using Support.API.Services.KoboFormData;
 using System.Threading.Tasks;
 
 namespace Support.Api.Controllers
@@ -11,10 +11,10 @@ namespace Support.Api.Controllers
     public class HealthCheckController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly KoboDbContext _koboDbContext;
+        private readonly KoboFormDbContext _koboDbContext;
 
         public HealthCheckController(ApplicationDbContext dbContext,
-                                     KoboDbContext koboDbContext)
+                                     KoboFormDbContext koboDbContext)
         {
             _dbContext = dbContext;
             _koboDbContext = koboDbContext;
