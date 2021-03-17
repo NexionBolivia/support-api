@@ -43,11 +43,8 @@ namespace Support.Api.Controllers
             var jwt = CreateJWT(data, koboToken);
             
             return Ok(new 
-            { 
-                id = data.Username,
-                authToken = jwt,
-                roles = this.koboUserService.GetRolesByKoboUsername(data.Username),
-                organizations = this.koboUserService.GetOrganizationsByKoboUsername(data.Username)
+            {
+                authToken = jwt
             });
         }
 
