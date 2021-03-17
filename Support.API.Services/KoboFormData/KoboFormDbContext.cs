@@ -1,22 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Support.API.Services.KoboData
+namespace Support.API.Services.KoboFormData
 {
-    public class KoboDbContext : DbContext
+    public class KoboFormDbContext : DbContext
     {
-        public KoboDbContext(DbContextOptions<KoboDbContext> options)
+        public KoboFormDbContext(DbContextOptions<KoboFormDbContext> options)
             : base(options)
         {
 
         }
         public virtual DbSet<KoboUser> KoboUsers { get; set; }
+        public virtual DbSet<KoboFormAuthToken> AuthTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            new KoboDbContextBuilder().BuildModel(modelBuilder);
+            new KoboFormDbContextBuilder().BuildModel(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -18,5 +18,9 @@ namespace Support.API.Services.Services
         Task<List<UserAsset>> GetAssetsForCurrentUser(string userName);
 
         Task<int> GetKoboUserIdForKoboUsername(string username);
+
+        Task<string> SetFirstLoginToken(string userName);
+        
+        Task<string> ActivateUser(string userName);
     }
 }

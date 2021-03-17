@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Support.API.Services.KoboData
+namespace Support.API.Services.KoboCatData
 {
     /// <summary>
     /// This entity maps to KoboForms' db table: auth_user
     /// </summary>
-    public class KoboUser
+    public class KoboCatUser
     {
         // id (int)
         public int Id { get; set; }
