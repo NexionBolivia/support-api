@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Http;
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,13 @@ namespace Support.Api.Controllers
             this.koboUserService = koboUserService;
         }
 
+        /// <summary>
+        ///     Authentication on KoBoToolbox. If it's user's first login, then it will 
+        ///     create a token on authtoken_token tables on koboform and kobocat DBs.
+        ///     This process assumes that is_active = true on auth_user tables on both DBs
+        /// </summary>
+        /// <response code="200">Annonymous type: { authToken: string} </response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult> Authenticate(LoginRequest data)

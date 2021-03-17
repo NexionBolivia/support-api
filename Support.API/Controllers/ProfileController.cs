@@ -21,6 +21,11 @@ namespace Support.Api.Controllers
             this.profileService = profileService;
         }
 
+        /// <summary>
+        ///     Get all profiles
+        /// </summary>
+        /// <response code="200">List of profiles</response>
+        [ProducesResponseType(typeof(IEnumerable<ProfileRequest>), StatusCodes.Status200OK)]
         [HttpGet]
         [ActionName("All")]
         public ActionResult<IEnumerable<ProfileRequest>> GetProfiles()
@@ -28,6 +33,11 @@ namespace Support.Api.Controllers
             return Ok(this.profileService.GetProfiles());
         }
 
+        /// <summary>
+        ///     Get a profile by Id
+        /// </summary>
+        /// <response code="200">Instance of ProfileRequest</response>
+        [ProducesResponseType(typeof(ProfileRequest), StatusCodes.Status200OK)]
         [HttpGet]
         [ActionName("Get")]
         public ActionResult<ProfileRequest> GetProfile(int profileId)
@@ -37,6 +47,11 @@ namespace Support.Api.Controllers
             else return Ok(this.profileService.GetProfile(profileId));
         }
 
+        /// <summary>
+        ///     Saves a profile. If it doesn't exist, it creates, if it exists there's an update
+        /// </summary>
+        /// <response code="200">Annonymous object { profileId: string }</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost]
         [ActionName("Update")]
         public ActionResult CreateUpdateProfile(ProfileRequest data)
