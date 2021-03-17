@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Support.API.Services.Helpers;
 using Support.API.Services.Models.Request;
+using Support.API.Services.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,11 +13,6 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Support.API.Services.Helpers;
-using System.IO;
-using Support.API.Services.Data;
-using Support.API.Services.Services;
-using Support.API.Services.KoboData;
 
 namespace Support.Api.Controllers
 {
@@ -30,6 +28,13 @@ namespace Support.Api.Controllers
             this.koboUserService = koboUserService;
         }
 
+        /// <summary>
+        ///     Authentication on KoBoToolbox. If it's user's first login, then it will 
+        ///     create a token on authtoken_token tables on koboform and kobocat DBs.
+        ///     This process assumes that is_active = true on auth_user tables on both DBs
+        /// </summary>
+        /// <response code="200">Annonymous type: { authToken: string} </response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult> Authenticate(LoginRequest data)

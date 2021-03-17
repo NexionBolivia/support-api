@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Support.API.Services.Helpers;
 using Support.API.Services.Services;
 
@@ -33,11 +34,23 @@ namespace Support.Api
             services.AddHttpClient();
             services.AddHttpContextAccessor();
             services.AddControllers().AddNewtonsoftJson();
+
+            services.AddSwaggerAuthorizationOptions("Support API", "API services for support");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            if (env.IsDevelopment())
+            {
+                app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support API"); });
+            }
+            //else
+            //{
+            //    app.UseHttpsRedirection();
+            //}
+
             app.UseCors("CorsPolicy");
 
             app.UseRouting();

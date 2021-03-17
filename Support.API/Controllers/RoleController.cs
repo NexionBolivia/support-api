@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Support.API.Services.Data;
 using Support.API.Services.Models;
-using Support.API.Services.Models.Request;
 using Support.API.Services.Services;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Support.Api.Controllers
@@ -23,6 +20,11 @@ namespace Support.Api.Controllers
             this.roleService = roleService;
         }
 
+        /// <summary>
+        ///     Get all roles
+        /// </summary>
+        /// <response code="200">List of roles</response>
+        [ProducesResponseType(typeof(List<RoleResponse>), StatusCodes.Status200OK)]
         [HttpGet]
         [ActionName("All")]
         public async Task<ActionResult> GetAll()

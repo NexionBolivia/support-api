@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Support.Api.Controllers
 {
@@ -17,13 +17,21 @@ namespace Support.Api.Controllers
         };
 
         private readonly ILogger<DummyController> _logger;
-
+        /// <summary>
+        ///     Called by DI
+        /// </summary>
+        /// <param name="logger"></param>
         public DummyController(ILogger<DummyController> logger)
         {
             _logger = logger;
         }
 
+        /// <summary>
+        ///     Get weatherForecast dummy
+        /// </summary>
+        /// <response code="200">Returns list of forecast</response>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<WeatherForecast>), StatusCodes.Status200OK)]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();

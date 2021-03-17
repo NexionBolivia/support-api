@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Support.API</name>
+    </assembly>
+    <members>
+        <member name="M:Support.Api.Controllers.DummyController.#ctor(Microsoft.Extensions.Logging.ILogger{Support.Api.Controllers.DummyController})">
+            <summary>
+                Called by DI
+            </summary>
+            <param name="logger"></param>
+        </member>
+        <member name="M:Support.Api.Controllers.DummyController.Get">
+            <summary>
+                Get weatherForecast dummy
+            </summary>
+            <response code="200">Returns list of forecast</response>
+        </member>
+        <member name="M:Support.Api.Controllers.HealthCheckController.All">
+            <summary>
+                Check if api server is reachable
+            </summary>
+            <response code="200">API is accessible</response>
+        </member>
+        <member name="M:Support.Api.Controllers.HealthCheckController.HealthCheckDB">
+            <summary>
+                Check if Support API db (Postgresql) is reacheable
+            </summary>
+            <response code="200">Support API DB is accessible</response>
+        </member>
+        <member name="M:Support.Api.Controllers.HealthCheckController.HealthCheckKoboDBConnectivity">
+            <summary>
+                Returns healthcheck against KoboForms db
+            </summary>
+            <response code="200">Koboform is reacheable</response>
+        </member>
+        <member name="M:Support.Api.Controllers.HealthCheckController.Seed">
+            <summary>
+                Performs Seed of DATA
+            </summary>
+            <response code="200">Data Seed performed</response>
+        </member>
+        <member name="M:Support.Api.Controllers.HealthCheckController.AutorizedCall">
+            <summary>
+                Checks if an token call (using Authorize 'Bearer [token]') is accepted
+            </summary>
+            <response code="200">Call can be performed, token is valid</response>
+        </member>
+        <member name="M:Support.Api.Controllers.KoboUserController.GetAll">
+            <summary>
+                List of users detail
+            </summary>
+            <response code="200"></response>
+        </member>
+        <member name="M:Support.Api.Controllers.KoboUserController.UpdateKoboUser(Support.API.Services.Models.Request.KoboUserRequest)">
+            <summary>
+                Updates roles and organizations for a user
+            </summary>
+            <response code="200"></response>
+        </member>
+        <member name="M:Support.Api.Controllers.KoboUserController.GetUserResources">
+            <summary>
+                Get UserId, Assets and organizations associated
+            </summary>
+            <response code="200">Annonymous type:  { koboUserId = int, assets = [], organizations = [] }</response>
+        </member>
+        <member name="M:Support.Api.Controllers.LoginController.Authenticate(Support.API.Services.Models.Request.LoginRequest)">
+            <summary>
+                Authentication on KoBoToolbox. If it's user's first login, then it will 
+                create a token on authtoken_token tables on koboform and kobocat DBs.
+                This process assumes that is_active = true on auth_user tables on both DBs
+            </summary>
+            <response code="200">Annonymous type: { authToken: string} </response>
+        </member>
+        <member name="M:Support.Api.Controllers.OrganizationController.GetAll">
+            <summary>
+                Get all organizations
+            </summary>
+            <response code="200">List of organizations</response>
+        </member>
+        <member name="M:Support.Api.Controllers.OrganizationController.Delete(System.String)">
+            <summary>
+                Deletes an organization and its relations with children and profiles
+            </summary>
+            <response code="200">Organization was deleted</response>
+        </member>
+        <member name="M:Support.Api.Controllers.OrganizationController.CreateUpdate(Support.API.Services.Models.Request.OrganizationRequest)">
+            <summary>
+                Saves an organization. If it doesn't exist, it creates, if it exists there's an update
+            </summary>
+            <response code="200">Annonymous object: { organizationId: string }</response>
+        </member>
+        <member name="M:Support.Api.Controllers.ProfileController.GetProfiles">
+            <summary>
+                Get all profiles
+            </summary>
+            <response code="200">List of profiles</response>
+        </member>
+        <member name="M:Support.Api.Controllers.ProfileController.GetProfile(System.Int32)">
+            <summary>
+                Get a profile by Id
+            </summary>
+            <response code="200">Instance of ProfileRequest</response>
+        </member>
+        <member name="M:Support.Api.Controllers.ProfileController.CreateUpdateProfile(Support.API.Services.Models.Request.ProfileRequest)">
+            <summary>
+                Saves a profile. If it doesn't exist, it creates, if it exists there's an update
+            </summary>
+            <response code="200">Annonymous object { profileId: string }</response>
+        </member>
+        <member name="M:Support.Api.Controllers.RoleController.GetAll">
+            <summary>
+                Get all roles
+            </summary>
+            <response code="200">List of roles</response>
+        </member>
+    </members>
+</doc>
