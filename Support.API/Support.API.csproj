@@ -5,8 +5,8 @@
     <RootNamespace>Support.Api</RootNamespace>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>S:\dev\nexion\groots\dev\support\Support.API\Support.API.xml</DocumentationFile>
+  <PropertyGroup>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

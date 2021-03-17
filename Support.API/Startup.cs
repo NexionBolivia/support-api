@@ -46,11 +46,7 @@ namespace Support.Api
             {
                 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support API"); });
             }
-            //else
-            //{
-            //    app.UseHttpsRedirection();
-            //}
-
+            
             app.UseCors("CorsPolicy");
 
             app.UseRouting();
