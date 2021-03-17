@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Support.API.Services.Helpers;
 using Support.API.Services.Models.Request;
+using Support.API.Services.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,11 +13,6 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Support.API.Services.Helpers;
-using System.IO;
-using Support.API.Services.Data;
-using Support.API.Services.Services;
-using Support.API.Services.KoboData;
 
 namespace Support.Api.Controllers
 {
@@ -34,7 +32,7 @@ namespace Support.Api.Controllers
         [Route("login")]
         public async Task<ActionResult> Authenticate(LoginRequest data)
         {
-            var koboToken = await LoginToKoBoToolbox(data);
+            var koboToken = await LoginToKoBoToolbox(data, firstAttempt: true);
 
             if (koboToken == null)
                 return Unauthorized();
@@ -71,7 +69,7 @@ namespace Support.Api.Controllers
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task<string> LoginToKoBoToolbox(LoginRequest request)
+        private async Task<string> LoginToKoBoToolbox(LoginRequest request, bool firstAttempt)
         {
             string token = null;
             try
@@ -93,11 +91,22 @@ namespace Support.Api.Controllers
                     var tokenRaw = await responseMessage.Content.ReadAsStringAsync();
                     var tokenTmpl = new { token = string.Empty };
                     var tokenObj = JsonConvert.DeserializeAnonymousType(tokenRaw, tokenTmpl);
-                    
+
                     token = tokenObj.token;
                 }
+                // Does the best effort for login
+                else if (responseMessage.StatusCode == System.Net.HttpStatusCode.Forbidden
+                    && firstAttempt)
+                {
+                    var key = await koboUserService.SetFirstLoginToken(request.Username);
+                    if (key != null) // Means token was created 
+                    {
+                        firstAttempt = false;
+                        token = await LoginToKoBoToolbox(request, firstAttempt);
+                    }
+                }
             }
-            catch
+            catch (Exception ex)
             {
                // Do not throw any exception here 
             }

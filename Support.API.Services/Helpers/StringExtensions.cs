@@ -17,13 +17,24 @@ namespace Support.API.Services.Helpers
                         .ReplaceWithValue("SUPPORT_DB_PASSWORD");
         }
 
-        public static string? ReplaceConnectionStringEnvVarsForKobo(this string? toReplace)
+        public static string? ReplaceConnectionStringEnvVarsForKoboForm(this string? toReplace)
         {
             return toReplace == null ?
                       toReplace : toReplace
                         .ReplaceWithValue("KOBO_DB_SERVER")
                         .ReplaceWithValue("KOBO_DB_PORT")
                         .ReplaceWithValue("KOBO_DB_NAME")
+                        .ReplaceWithValue("KOBO_DB_USER")
+                        .ReplaceWithValue("KOBO_DB_PASSWORD");
+        }
+
+        public static string? ReplaceConnectionStringEnvVarsForKoboCat(this string? toReplace)
+        {
+            return toReplace == null ?
+                      toReplace : toReplace
+                        .ReplaceWithValue("KOBO_DB_SERVER")
+                        .ReplaceWithValue("KOBO_DB_PORT")
+                        .ReplaceWithValue("KOBO_CAT_DB_NAME")
                         .ReplaceWithValue("KOBO_DB_USER")
                         .ReplaceWithValue("KOBO_DB_PASSWORD");
         }
