@@ -73,11 +73,13 @@ namespace Support.Api.Controllers
         {
             var userName = httpContextAccessor.HttpContext.GetCurrentUserName(); // For loggedIn user only
             var koboUserId = await koboUserService.GetKoboUserIdForKoboUsername(userName);
+            var koboUserRoles = koboUserService.GetRolesByKoboUsername(userName);
             var assetsForUser = await koboUserService.GetAssetsForCurrentUser(userName);
             var organizationsForUser = koboUserService.GetOrganizationsByKoboUsername(userName);
             return Ok(
                 new {
                     koboUserId = koboUserId,
+                    roles = koboUserRoles,
                     assets = assetsForUser,
                     organizations = organizationsForUser
                 });
