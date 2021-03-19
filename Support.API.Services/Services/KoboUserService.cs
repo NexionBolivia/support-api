@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Support.API.Services.Data;
 using Support.API.Services.KoboCatData;
 using Support.API.Services.KoboFormData;
@@ -17,14 +18,17 @@ namespace Support.API.Services.Services
         private readonly ApplicationDbContext applicationDbContext;
         private readonly KoboFormDbContext koboFormDbContext;
         private readonly KoboCatDbContext koboCatContext;
+        private readonly ILogger<KoboUserService> logger;
 
         public KoboUserService(ApplicationDbContext appContext, 
             KoboFormDbContext koboFormContext,
-            KoboCatDbContext koboCatContext)
+            KoboCatDbContext koboCatContext,
+            ILogger<KoboUserService> logger)
         {
             this.applicationDbContext = appContext;
             this.koboFormDbContext = koboFormContext;
             this.koboCatContext = koboCatContext;
+            this.logger = logger;
         }
 
         public IEnumerable<KoboUserDetail> GetAll()
@@ -225,11 +229,14 @@ namespace Support.API.Services.Services
                     };
                     koboFormDbContext.Add(tokenOnKoboForm);
                     await koboFormDbContext.SaveChangesAsync();
+
+                    logger.LogInformation($"Tokens created on Kobo DBs for userId: {user.Id} ({userName})");
                 }
                 else if (
                         (tokenOnKoboCat == null && tokenOnKoboForm != null)
                     || (tokenOnKoboCat != null && tokenOnKoboForm == null))
                 {
+                    logger.LogError($"Error with authtoken_token table. User on KoboForm db: { (tokenOnKoboForm == null ? "Does not exist" : "Exist") }. User on KoboCat db: { (tokenOnKoboCat == null ? "Does not exist" : "Exist") }");
                     throw new ApplicationException($"Error with authtoken_token table. User on KoboForm db: { (tokenOnKoboForm == null ? "Does not exist" : "Exist") }. User on KoboCat db: { (tokenOnKoboCat == null ? "Does not exist" : "Exist") }");
                 }
             }

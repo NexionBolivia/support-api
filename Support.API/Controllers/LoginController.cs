@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Support.Api.Controllers
 {
@@ -22,11 +23,15 @@ namespace Support.Api.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IKoboUserService koboUserService;
+        private readonly ILogger<LoginController> logger;
 
-        public LoginController(IConfiguration config, IKoboUserService koboUserService)
+        public LoginController(IConfiguration config, 
+            IKoboUserService koboUserService,
+            ILogger<LoginController> logger)
         {
             _config = config;
             this.koboUserService = koboUserService;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -106,16 +111,20 @@ namespace Support.Api.Controllers
                 else if (responseMessage.StatusCode == System.Net.HttpStatusCode.Forbidden
                     && firstAttempt)
                 {
+                    logger.LogInformation($"Login user for first time: { request.Username }");
+
                     var key = await koboUserService.SetFirstLoginToken(request.Username);
                     if (key != null) // Means token was created 
                     {
                         firstAttempt = false;
+                        logger.LogInformation($"ReLogin for user: { request.Username }");
                         token = await LoginToKoBoToolbox(request, firstAttempt);
                     }
                 }
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "Error when accessing any of Kobo DBs", request.Username);
                // Do not throw any exception here 
             }
             return token;
