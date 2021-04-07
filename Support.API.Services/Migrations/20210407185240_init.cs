@@ -3,12 +3,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Support.API.Services.Migrations
 {
-    public partial class NewMigration : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Assets",
+                name: "Asset",
                 columns: table => new
                 {
                     AssetId = table.Column<int>(nullable: false)
@@ -20,11 +20,11 @@ namespace Support.API.Services.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Assets", x => x.AssetId);
+                    table.PrimaryKey("PK_Asset", x => x.AssetId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrganizationProfiles",
+                name: "OrganizationProfile",
                 columns: table => new
                 {
                     ProfileId = table.Column<int>(nullable: false)
@@ -47,11 +47,11 @@ namespace Support.API.Services.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrganizationProfiles", x => x.ProfileId);
+                    table.PrimaryKey("PK_OrganizationProfile", x => x.ProfileId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Roles",
+                name: "Role",
                 columns: table => new
                 {
                     RoleId = table.Column<int>(nullable: false)
@@ -60,11 +60,11 @@ namespace Support.API.Services.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.RoleId);
+                    table.PrimaryKey("PK_Role", x => x.RoleId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Organizations",
+                name: "Organization",
                 columns: table => new
                 {
                     OrganizationId = table.Column<int>(nullable: false)
@@ -76,31 +76,13 @@ namespace Support.API.Services.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Organizations", x => x.OrganizationId);
+                    table.PrimaryKey("PK_Organization", x => x.OrganizationId);
                     table.ForeignKey(
-                        name: "FK_Organizations_OrganizationProfiles_IdProfile",
+                        name: "FK_Organization_OrganizationProfile_IdProfile",
                         column: x => x.IdProfile,
-                        principalTable: "OrganizationProfiles",
+                        principalTable: "OrganizationProfile",
                         principalColumn: "ProfileId",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RolesToKoboUsers",
-                columns: table => new
-                {
-                    KoboUserId = table.Column<int>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RolesToKoboUsers", x => new { x.KoboUserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_RolesToKoboUsers_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "RoleId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,21 +96,39 @@ namespace Support.API.Services.Migrations
                 {
                     table.PrimaryKey("PK_RoleToAsset", x => new { x.RoleId, x.AssetId });
                     table.ForeignKey(
-                        name: "FK_RoleToAsset_Assets_AssetId",
+                        name: "FK_RoleToAsset_Asset_AssetId",
                         column: x => x.AssetId,
-                        principalTable: "Assets",
+                        principalTable: "Asset",
                         principalColumn: "AssetId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleToAsset_Roles_RoleId",
+                        name: "FK_RoleToAsset_Role_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Roles",
+                        principalTable: "Role",
                         principalColumn: "RoleId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrganizationsToKoboUsers",
+                name: "RoleToKoboUser",
+                columns: table => new
+                {
+                    KoboUserId = table.Column<int>(nullable: false),
+                    RoleId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleToKoboUser", x => new { x.KoboUserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_RoleToKoboUser_Role_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Role",
+                        principalColumn: "RoleId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrganizationToKoboUser",
                 columns: table => new
                 {
                     KoboUserId = table.Column<int>(nullable: false),
@@ -136,59 +136,59 @@ namespace Support.API.Services.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrganizationsToKoboUsers", x => new { x.KoboUserId, x.OrganizationId });
+                    table.PrimaryKey("PK_OrganizationToKoboUser", x => new { x.KoboUserId, x.OrganizationId });
                     table.ForeignKey(
-                        name: "FK_OrganizationsToKoboUsers_Organizations_OrganizationId",
+                        name: "FK_OrganizationToKoboUser_Organization_OrganizationId",
                         column: x => x.OrganizationId,
-                        principalTable: "Organizations",
+                        principalTable: "Organization",
                         principalColumn: "OrganizationId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Organizations_IdProfile",
-                table: "Organizations",
+                name: "IX_Organization_IdProfile",
+                table: "Organization",
                 column: "IdProfile",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrganizationsToKoboUsers_OrganizationId",
-                table: "OrganizationsToKoboUsers",
+                name: "IX_OrganizationToKoboUser_OrganizationId",
+                table: "OrganizationToKoboUser",
                 column: "OrganizationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RolesToKoboUsers_RoleId",
-                table: "RolesToKoboUsers",
-                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleToAsset_AssetId",
                 table: "RoleToAsset",
                 column: "AssetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleToKoboUser_RoleId",
+                table: "RoleToKoboUser",
+                column: "RoleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrganizationsToKoboUsers");
-
-            migrationBuilder.DropTable(
-                name: "RolesToKoboUsers");
+                name: "OrganizationToKoboUser");
 
             migrationBuilder.DropTable(
                 name: "RoleToAsset");
 
             migrationBuilder.DropTable(
-                name: "Organizations");
+                name: "RoleToKoboUser");
 
             migrationBuilder.DropTable(
-                name: "Assets");
+                name: "Organization");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Asset");
 
             migrationBuilder.DropTable(
-                name: "OrganizationProfiles");
+                name: "Role");
+
+            migrationBuilder.DropTable(
+                name: "OrganizationProfile");
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Support.API.Services.Data
 
         private void MapSyncRequestAsset(EntityTypeBuilder<Asset> builder)
         {
+            builder.ToTable("Asset");
             builder.HasKey(p => p.AssetId);
             builder.Property(p => p.AssetId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(p => p.Name).HasMaxLength(500);
@@ -29,6 +30,7 @@ namespace Support.API.Services.Data
 
         private void MapSyncRequestOrganization(EntityTypeBuilder<Organization> builder)
         {
+            builder.ToTable("Organization");
             builder.HasKey(p => p.OrganizationId);
             builder.Property(p => p.OrganizationId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(p => p.Name).HasMaxLength(500);
@@ -38,6 +40,7 @@ namespace Support.API.Services.Data
 
         private void MapSyncRequestOrganizationProfile(EntityTypeBuilder<OrganizationProfile> builder)
         {
+            builder.ToTable("OrganizationProfile");
             builder.HasKey(p => p.ProfileId);
             builder.Property(p => p.ProfileId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(p => p.Formation).HasMaxLength(500);
@@ -52,6 +55,7 @@ namespace Support.API.Services.Data
 
         private void MapSyncRequestOrganizationToKoboUser(EntityTypeBuilder<OrganizationToKoboUser> builder)
         {
+            builder.ToTable("OrganizationToKoboUser");
             builder.HasKey(p => new { p.KoboUserId, p.OrganizationId });
             builder.Property(p => p.KoboUserId).IsRequired();
             builder.Property(p => p.OrganizationId).IsRequired();
@@ -60,6 +64,7 @@ namespace Support.API.Services.Data
 
         private void MapSyncRequestRole(EntityTypeBuilder<Role> builder)
         {
+            builder.ToTable("Role");
             builder.HasKey(p => p.RoleId);
             builder.Property(p => p.RoleId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(p => p.Name).HasMaxLength(50);
@@ -67,6 +72,7 @@ namespace Support.API.Services.Data
 
         private void MapSyncRequestRoleToAsset(EntityTypeBuilder<RoleToAsset> builder)
         {
+            builder.ToTable("RoleToAsset");
             builder.HasKey(p => new { p.RoleId, p.AssetId });
             builder.HasOne(p => p.Role).WithMany(p => p.RoleToAssets).HasForeignKey(p => p.RoleId);
             builder.HasOne(p => p.Asset).WithMany(p => p.RoleToAssets).HasForeignKey(p => p.AssetId);
@@ -74,6 +80,7 @@ namespace Support.API.Services.Data
 
         private void MapSyncRequestRoleToKoboUser(EntityTypeBuilder<RoleToKoboUser> builder)
         {
+            builder.ToTable("RoleToKoboUser");
             builder.HasKey(p => new { p.KoboUserId, p.RoleId });
             builder.Property(p => p.KoboUserId).IsRequired();
             builder.Property(p => p.RoleId).IsRequired();

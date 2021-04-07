@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Support.API.Services.Data;
 using Support.API.Services.Models;
-using System;
+using Support.API.Services.Models.Request;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,20 +10,24 @@ namespace Support.API.Services.Extensions
 {
     public static class SeedExtensions
     {
-		public static void SeedData(IApplicationBuilder applicationBuilder)
+		public static void SeedData(this ApplicationDbContext context, ILogger logger, SeedRequest request)
 		{
-			using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+			if (!context.IsInMemory() &&
+				request != null &&
+				request.Migrate)
 			{
-				var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-				if(dbContext != null)
-					dbContext.SeedData();
-			}
-		}
+				logger.LogInformation("Starting Schema migration - Support API");
 
-		public static void SeedData(this ApplicationDbContext context, bool migrateDb = true)
-		{
-			if (context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory" && migrateDb)
+				if (request.DeleteDB)
+                {
+					logger.LogInformation("Performing EnsureDeleted as requested");
+					context.Database.EnsureDeleted();
+					logger.LogInformation("EnsureDeleted performed");
+				}
+								
 				context.Database.Migrate();
+				logger.LogInformation("Migration performed");
+			}
 
 			// Seed Data
 			if (!context.Organizations.Any() && !context.OrganizationsToKoboUsers.Any())
@@ -301,5 +304,6 @@ namespace Support.API.Services.Extensions
 				context.SaveChanges();
 			}
 		}
+		private static bool IsInMemory(this ApplicationDbContext context) => context.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
 	}
 }
