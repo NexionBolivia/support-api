@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Support.API.Services.Data;
 using Support.API.Services.Models;
 using System;
@@ -11,24 +12,28 @@ namespace Support.API.Services.Extensions
 {
     public static class SeedExtensions
     {
-		public static void SeedData(IApplicationBuilder applicationBuilder)
+		public static void SeedData(IApplicationBuilder applicationBuilder, ILogger logger)
 		{
 			using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
 			{
 				var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
 				if(dbContext != null)
-					dbContext.SeedData();
+					dbContext.SeedData(logger);
 			}
 		}
 
-		public static void SeedData(this ApplicationDbContext context, bool migrateDb = true)
+		public static void SeedData(this ApplicationDbContext context, ILogger logger, bool migrateDb = true)
 		{
 			if (context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory" && migrateDb)
+			{
+				logger.LogInformation("Starting Schema migration - Support API");
 				context.Database.Migrate();
+			}
 
 			// Seed Data
 			if (!context.Organizations.Any() && !context.OrganizationsToKoboUsers.Any())
 			{
+				logger.LogInformation("Starting Data Seed for Organizations  - Support API");
 				// Members
 				var organization = new Organization()
 				{
@@ -43,8 +48,10 @@ namespace Support.API.Services.Extensions
 					KoboUserId = 1
 				});
 			}
+
 			if (!context.Assets.Any() && !context.Roles.Any() && !context.RolesToKoboUsers.Any())
 			{
+				logger.LogInformation("Starting Data Seed for Assets, Roles & RolesToKoboUsers - Support API");
 				// Roles
 				var r_Administrador = new Role()
 				{
@@ -299,6 +306,7 @@ namespace Support.API.Services.Extensions
 				});
 
 				context.SaveChanges();
+				logger.LogInformation("Data seed generated for Support API");
 			}
 		}
 	}
