@@ -7,6 +7,8 @@ using Support.API.Services.Extensions;
 using Support.API.Services.Services;
 using Support.API.Services.Models.Request;
 using FluentAssertions;
+using NSubstitute;
+using Microsoft.Extensions.Logging;
 
 namespace Support.API.Services.Test.Services
 {
@@ -23,7 +25,7 @@ namespace Support.API.Services.Test.Services
                 .Options;
 
             context = new ApplicationDbContext(options);
-            SeedExtensions.SeedData(context);
+            SeedExtensions.SeedData(context, Substitute.For<ILogger>());
             profileService = new ProfileService(context);
         }
 
