@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Support.API.Services.Data;
@@ -24,8 +25,7 @@ namespace Support.API.Services.Test.Services
                 .Options;
 
             context = new ApplicationDbContext(options);
-            SeedExtensions.SeedData(context, Substitute.For<SeedRequest>());
-            SeedExtensions.SeedData(context, Substitute.For<ILogger>());
+            SeedExtensions.SeedData(context, Substitute.For<ILogger>(), Substitute.For<SeedRequest>());
             profileService = new ProfileService(context);
         }
 

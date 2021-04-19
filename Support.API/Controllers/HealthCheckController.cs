@@ -91,7 +91,7 @@ namespace Support.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Seed(SeedRequest request)
         {
-d             _dbContext.SeedData(request,);
+            _dbContext.SeedData(logger, request);
 
             return Ok("ok");
         }
