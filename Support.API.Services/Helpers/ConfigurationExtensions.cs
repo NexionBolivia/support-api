@@ -23,10 +23,8 @@ namespace Support.API.Services.Helpers
         public static void ConfigureSupportDatabase(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddDbContext<ApplicationDbContext>(
-                    options =>
-                        options.UseNpgsql(
-                            Configuration.GetConnectionString(cSupportConnectionName).ReplaceConnectionStringEnvVars())
-                    );
+                    options => options.UseNpgsql(
+                            Configuration.GetConnectionString(cSupportConnectionName).ReplaceConnectionStringEnvVars()));
         }
 
         public static void ConfigureKoboFormDatabase(this IServiceCollection services, IConfiguration Configuration)

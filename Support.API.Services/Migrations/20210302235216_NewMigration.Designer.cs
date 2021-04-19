@@ -10,8 +10,8 @@ using Support.API.Services.Data;
 namespace Support.API.Services.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210407185240_init")]
-    partial class init
+    [Migration("20210302235216_NewMigration")]
+    partial class NewMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,7 +45,7 @@ namespace Support.API.Services.Migrations
 
                     b.HasKey("AssetId");
 
-                    b.ToTable("Asset");
+                    b.ToTable("Assets");
                 });
 
             modelBuilder.Entity("Support.API.Services.Models.Organization", b =>
@@ -74,7 +74,7 @@ namespace Support.API.Services.Migrations
                     b.HasIndex("IdProfile")
                         .IsUnique();
 
-                    b.ToTable("Organization");
+                    b.ToTable("Organizations");
                 });
 
             modelBuilder.Entity("Support.API.Services.Models.OrganizationProfile", b =>
@@ -138,7 +138,7 @@ namespace Support.API.Services.Migrations
 
                     b.HasKey("ProfileId");
 
-                    b.ToTable("OrganizationProfile");
+                    b.ToTable("OrganizationProfiles");
                 });
 
             modelBuilder.Entity("Support.API.Services.Models.OrganizationToKoboUser", b =>
@@ -153,7 +153,7 @@ namespace Support.API.Services.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("OrganizationToKoboUser");
+                    b.ToTable("OrganizationsToKoboUsers");
                 });
 
             modelBuilder.Entity("Support.API.Services.Models.Role", b =>
@@ -169,7 +169,7 @@ namespace Support.API.Services.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Support.API.Services.Models.RoleToAsset", b =>
@@ -199,7 +199,7 @@ namespace Support.API.Services.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleToKoboUser");
+                    b.ToTable("RolesToKoboUsers");
                 });
 
             modelBuilder.Entity("Support.API.Services.Models.Asset", b =>
