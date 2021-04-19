@@ -1,14 +1,13 @@
-﻿using System;
-using NUnit.Framework;
+﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using NSubstitute;
+using NUnit.Framework;
 using Support.API.Services.Data;
 using Support.API.Services.Extensions;
-using Support.API.Services.Services;
 using Support.API.Services.Models.Request;
-using FluentAssertions;
-using NSubstitute;
-using Microsoft.Extensions.Logging;
+using Support.API.Services.Services;
+using System;
+using System.Linq;
 
 namespace Support.API.Services.Test.Services
 {
@@ -25,6 +24,7 @@ namespace Support.API.Services.Test.Services
                 .Options;
 
             context = new ApplicationDbContext(options);
+            SeedExtensions.SeedData(context, Substitute.For<SeedRequest>());
             SeedExtensions.SeedData(context, Substitute.For<ILogger>());
             profileService = new ProfileService(context);
         }

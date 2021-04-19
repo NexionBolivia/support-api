@@ -5,10 +5,14 @@ using Microsoft.Extensions.Logging;
 using Support.API.Services.Data;
 using Support.API.Services.Extensions;
 using Support.API.Services.KoboFormData;
+using Support.API.Services.Models.Request;
 using System.Threading.Tasks;
 
 namespace Support.Api.Controllers
 {
+    /// <summary>
+    /// Health check controller
+    /// </summary>
     [ApiController]
     public class HealthCheckController : ControllerBase
     {
@@ -16,6 +20,11 @@ namespace Support.Api.Controllers
         private readonly KoboFormDbContext _koboDbContext;
         private readonly ILogger<HealthCheckController> logger;
 
+        /// <summary>
+        /// Init controller
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="koboDbContext"></param>
         public HealthCheckController(ApplicationDbContext dbContext,
                                      KoboFormDbContext koboDbContext,
                                      ILogger<HealthCheckController> logger)
@@ -74,15 +83,15 @@ namespace Support.Api.Controllers
         }
 
         /// <summary>
-        ///     Performs Seed of DATA
+        ///     Performs Seed of DATA and STRUCTURE creation
         /// </summary>
         /// <response code="200">Data Seed performed</response>
         [Route("seed")]
-        [HttpGet]
+        [HttpPut] [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Seed()
+        public IActionResult Seed(SeedRequest request)
         {
-            _dbContext.SeedData(logger, false);
+d             _dbContext.SeedData(request,);
 
             return Ok("ok");
         }
