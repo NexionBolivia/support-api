@@ -25,6 +25,7 @@ namespace Support.API.Services.Test.Services
 
             context = new ApplicationDbContext(options);
             SeedExtensions.SeedData(context, Substitute.For<SeedRequest>());
+            SeedExtensions.SeedData(context, Substitute.For<ILogger>());
             profileService = new ProfileService(context);
         }
 

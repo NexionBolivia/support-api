@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Support.API.Services.Data;
 using Support.API.Services.Extensions;
 using Support.API.Services.KoboFormData;
@@ -17,6 +18,7 @@ namespace Support.Api.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly KoboFormDbContext _koboDbContext;
+        private readonly ILogger<HealthCheckController> logger;
 
         /// <summary>
         /// Init controller
@@ -24,10 +26,12 @@ namespace Support.Api.Controllers
         /// <param name="dbContext"></param>
         /// <param name="koboDbContext"></param>
         public HealthCheckController(ApplicationDbContext dbContext,
-                                     KoboFormDbContext koboDbContext)
+                                     KoboFormDbContext koboDbContext,
+                                     ILogger<HealthCheckController> logger)
         {
             _dbContext = dbContext;
             _koboDbContext = koboDbContext;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -87,7 +91,7 @@ namespace Support.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Seed(SeedRequest request)
         {
-            _dbContext.SeedData(request);
+d             _dbContext.SeedData(request,);
 
             return Ok("ok");
         }
